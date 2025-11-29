@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { X, ChevronLeft, ChevronRight, MapPin, Phone, User } from 'lucide-react';
 import { FootballField } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useApp } from '../../contexts/AppContext';
 
 interface FieldDetailsModalProps {
   field: FootballField;
@@ -11,7 +10,6 @@ interface FieldDetailsModalProps {
 
 const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose }) => {
   const { translations } = useLanguage();
-  const { bookField } = useApp();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const nextImage = () => {
@@ -96,18 +94,9 @@ const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose })
                   <div className="text-gray-600">
                     <span className="font-medium">O'lcham:</span> {field.size}
                   </div>
-                </div>
-
-                <div className="mt-6">
-                  <button
-                    onClick={() => {
-                      bookField(field.id);
-                      onClose();
-                    }}
-                    className="w-full py-3 px-4 rounded-md text-white text-sm font-medium transition-colors duration-200 bg-green-600 hover:bg-green-700"
-                  >
-                    {translations.book}
-                  </button>
+                  <div className="text-gray-600">
+                    <span className="font-medium">{translations.price}:</span> {field.price.toLocaleString()} {translations.perHour}
+                  </div>
                 </div>
               </div>
             </div>

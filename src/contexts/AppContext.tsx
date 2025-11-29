@@ -7,14 +7,10 @@ interface AppContextType {
   filteredFields: FootballField[];
   viewMode: ViewMode;
   searchFilters: SearchFilters;
-  isModalOpen: boolean;
   isLoading: boolean;
   error: string | null;
   setViewMode: (mode: ViewMode) => void;
   setSearchFilters: (filters: Partial<SearchFilters>) => void;
-  openModal: () => void;
-  closeModal: () => void;
-  bookField: (fieldId: string) => void;
 }
 
 const AppContext = createContext<AppContextType>({
@@ -22,14 +18,10 @@ const AppContext = createContext<AppContextType>({
   filteredFields: [],
   viewMode: 'map',
   searchFilters: { query: '' },
-  isModalOpen: false,
   isLoading: false,
   error: null,
   setViewMode: () => {},
   setSearchFilters: () => {},
-  openModal: () => {},
-  closeModal: () => {},
-  bookField: () => {},
 });
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -37,7 +29,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [filteredFields, setFilteredFields] = useState<FootballField[]>(mockFields);
   const [viewMode, setViewMode] = useState<ViewMode>('map');
   const [searchFilters, setSearchFiltersState] = useState<SearchFilters>({ query: '' });
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -77,15 +68,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }, 500);
   }, [fields, searchFilters]);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  const bookField = (fieldId: string) => {
-    // In a real app, this would make an API call to book the field
-    console.log(`Booking field with ID: ${fieldId}`);
-    // For now, just show the login modal
-    openModal();
-  };
 
   return (
     <AppContext.Provider
@@ -94,14 +76,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         filteredFields,
         viewMode,
         searchFilters,
-        isModalOpen,
         isLoading,
         error,
         setViewMode,
         setSearchFilters,
-        openModal,
-        closeModal,
-        bookField,
       }}
     >
       {children}

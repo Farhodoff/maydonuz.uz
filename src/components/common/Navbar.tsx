@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Globe, Menu, X, LogIn } from 'lucide-react';
+import { Globe, Menu, X } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useApp } from '../../contexts/AppContext';
 import { Language } from '../../types';
 
 const Navbar: React.FC = () => {
-  const { language, setLanguage, translations } = useLanguage();
-  const { openModal } = useApp();
+  const { language, setLanguage } = useLanguage();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
@@ -61,14 +59,6 @@ const Navbar: React.FC = () => {
                 </div>
               )}
             </div>
-
-            <button
-              onClick={openModal}
-              className="flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-            >
-              <LogIn className="h-4 w-4 mr-2" />
-              {translations.login}
-            </button>
           </div>
 
           {/* Mobile menu button */}
@@ -92,7 +82,6 @@ const Navbar: React.FC = () => {
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <div className="flex flex-col space-y-2 px-3 py-2">
-              <span className="text-gray-700 font-medium">{translations.appName}</span>
               <div className="flex space-x-2">
                 <button
                   onClick={() => handleLanguageChange('uz')}
@@ -114,16 +103,6 @@ const Navbar: React.FC = () => {
                 </button>
               </div>
             </div>
-            <button
-              onClick={() => {
-                openModal();
-                setIsMobileMenuOpen(false);
-              }}
-              className="w-full flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-            >
-              <LogIn className="h-4 w-4 mr-2" />
-              {translations.login}
-            </button>
           </div>
         </div>
       )}

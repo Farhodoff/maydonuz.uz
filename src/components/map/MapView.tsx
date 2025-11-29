@@ -9,7 +9,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 mapboxgl.accessToken = 'pk.eyJ1IjoibWF5ZG9udXoiLCJhIjoiY21iYmMzankwMWh6eTJycTU1MzZmaWVkciJ9.S5sor-3J3nKTUZIWtrASwQ';
 
 const MapView: React.FC = () => {
-  const { filteredFields, bookField } = useApp();
+  const { filteredFields } = useApp();
   const { translations } = useLanguage();
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -91,12 +91,6 @@ const MapView: React.FC = () => {
           <span class="text-sm">${field.size}</span>
         </div>
         <div class="mt-2 text-sm font-medium">${translations.price}: ${field.price.toLocaleString()} ${translations.perHour}</div>
-        <button 
-          class="mt-2 w-full px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
-          onclick="window.bookField('${field.id}')"
-        >
-          ${translations.book}
-        </button>
       </div>
     `);
 
@@ -107,16 +101,6 @@ const MapView: React.FC = () => {
       .addTo(map.current);
   };
 
-  // Add global function for booking (needed for popup HTML)
-  useEffect(() => {
-    window.bookField = (fieldId: string) => {
-      bookField(fieldId);
-    };
-    
-    return () => {
-      delete window.bookField;
-    };
-  }, [bookField]);
 
   if (mapError) {
     return (
@@ -131,20 +115,13 @@ const MapView: React.FC = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div 
-        ref={mapContainer} 
+      <div
+        ref={mapContainer}
         className="h-[600px] w-full"
         style={{ position: 'relative' }}
       />
     </div>
   );
 };
-
-// Add global window declaration
-declare global {
-  interface Window {
-    bookField: (fieldId: string) => void;
-  }
-}
 
 export default MapView;
