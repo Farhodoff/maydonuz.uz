@@ -1,41 +1,41 @@
-# ⚽ Toshkent Mini-Futbol Maydonchalari Mock Data
+# ⚽ Tashkent Mini-Football Fields Mock Data
 
-## 📝 Kirish
+## 📝 Introduction
 
-Ushbu ombor (repository) Toshkent shahri va viloyatidagi 22 dan ortiq mini-futbol maydonchalari haqidagi ma'lumotlarni o'z ichiga olgan **Mock Data Massivi** hisoblanadi. Ma'lumotlar mobil yoki veb ilovalarni ishlab chiqishda sinov (testing), demo va prototiplash maqsadlarida bevosita import qilib ishlatish uchun tayyorlangan. Ma'lumotlar real bron qilish xizmatlari (masalan, ManaPolya.uz) asosida tuzilgan.
+This repository contains a **Mock Data Array** featuring information about over 22 mini-football fields located in Tashkent city and the surrounding region. The data is structured for direct import and use in mobile or web application development for testing, demo, and prototyping purposes. The dataset is based on the structure of real booking services (e.g., ManaPolya.uz).
 
-## 🎯 Loyiha Maqsadi
+## 🎯 Project Goals
 
-* Frontend loyihalarida (React, Vue, Angular, Mobile Apps) server so'rovlarisiz ishlash uchun tezkor ma'lumot manbai yaratish.
-* Xaritalar (Google Maps, Leaflet) va Geolokatsiya xususiyatlarini sinash.
-* Qidiruv, filtrlash va reyting tizimlarini ishlab chiqishda dastlabki ma'lumotlar bazasi vazifasini bajarish.
+* To provide a **fast data source** for frontend projects (React, Vue, Angular, Mobile Apps) to work without constant server requests.
+* To enable testing of maps (Google Maps, Leaflet) and Geolocation features.
+* To serve as an initial database for developing search, filtering, and rating systems.
 
-## 🛠️ Texnik Ma'lumotlar
+## 🛠️ Technical Specifications
 
-| Parametr | Qiymat |
+| Parameter | Value |
 | :--- | :--- |
-| **Asosiy Til** | TypeScript / JavaScript |
-| **Fayl Nomi** | `mockFields.ts` |
-| **Ma'lumotlar Soni** | 22 ta maydon |
-| **Eksport** | `export const mockFields` |
+| **Primary Language** | TypeScript / JavaScript |
+| **File Name** | `mockFields.ts` |
+| **Data Count** | 22 fields |
+| **Export** | `export const mockFields` |
 
-## 🏗️ Ma'lumotlar Tuzilishi (Interface)
+## 🏗️ Data Structure (Interface)
 
-Ma'lumotlar `FootballField` nomli TypeScript interfeysiga asoslangan:
+The data adheres to the following TypeScript interface named `FootballField`:
 
 ```typescript
 export interface FootballField {
-  id: string; // Noyob identifikator
-  name: string; // Maydonning nomi (Masalan: Lider Stadium)
-  district: string; // Joylashuv tumani (Masalan: Chilonzor)
-  address: string; // Taxminiy manzil
-  size: string; // Maydon o'lchami ('5x5', '7x7', '11x11')
-  price: number; // Soatiga taxminiy narx (So'mda)
-  rating: number; // Reyting (1.0 dan 5.0 gacha)
-  coordinates: [number, number]; // [Longitude, Latitude] - Uzunlik va Kenglik
-  images: string[]; // Rasmlar havolalari massivi (har bir maydon uchun noyob kombinatsiya)
-  fieldType: "Sun'iy" | "Tabiiy" | "Zamonaviy"; // Maydon turi
-  region: string; // Viloyat/shahar (Masalan: Toshkent shahar)
-  ownerName: string; // Maydon egasining shartli nomi
-  phone: string; // Aloqa raqami
+  id: string; // Unique identifier
+  name: string; // Field name (e.g., Lider Stadium)
+  district: string; // Location district (e.g., Chilonzor)
+  address: string; // Approximate address
+  size: string; // Field size ('5x5', '7x7', '11x11')
+  price: number; // Approximate hourly price (in UZS)
+  rating: number; // Rating (from 1.0 to 5.0)
+  coordinates: [number, number]; // [Longitude, Latitude]
+  images: string[]; // Array of image URLs (unique combination for each field)
+  fieldType: "Sun'iy" | "Tabiiy" | "Zamonaviy"; // Field type (Artificial, Natural, Modern)
+  region: string; // Region/City (e.g., Tashkent shahar)
+  ownerName: string; // Placeholder owner name
+  phone: string; // Contact phone number
 }
