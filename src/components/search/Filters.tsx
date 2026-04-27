@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import { FilterOption } from '../../types';
-import { fetchFields } from '../../utils/api';
 
 const regions: FilterOption[] = [
   { value: 'tashkent', label: 'Toshkent viloyat' },
@@ -35,8 +34,6 @@ const districts: FilterOption[] = [
 
 const Filters: React.FC = () => {
   const { searchFilters, setSearchFilters } = useApp();
-  // const [fields, setFields] = useState([]); // Olib tashlang
-  const [loading, setLoading] = useState(false);
 
   const handleFilterChange = (key: string, value: string) => {
     setSearchFilters({ ...searchFilters, [key]: value });
@@ -70,16 +67,6 @@ const Filters: React.FC = () => {
     </div>
   );
 
-  const url = `https://your-backend-api.com/fields?region=${searchFilters.region}&type=${searchFilters.fieldType}`;
-
-  useEffect(() => {
-    setLoading(true);
-    fetchFields(searchFilters)
-      .then(setFields)
-      .catch(() => {/* xatolikni ko'rsatish */})
-      .finally(() => setLoading(false));
-  }, [searchFilters]);
-
   return (
     <div className="w-full max-w-4xl mx-auto px-4 mt-4">
       <div className="flex flex-col md:flex-row gap-4">
@@ -110,6 +97,6 @@ const Filters: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Filters;

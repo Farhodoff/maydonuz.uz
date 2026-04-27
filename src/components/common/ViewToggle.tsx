@@ -13,15 +13,15 @@ const ViewToggle: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center my-4">
-      <div className="inline-flex rounded-md shadow-sm bg-gray-100 p-1">
+    <div className="flex justify-center my-6">
+      <div className="inline-flex rounded-2xl shadow-soft bg-white p-1.5 border border-slate-200">
         <button
           type="button"
           onClick={() => handleViewChange('map')}
-          className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
+          className={`inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-xl transition-colors duration-200 ${
             viewMode === 'map'
-              ? 'bg-white text-green-600 shadow-sm'
-              : 'text-gray-700 hover:text-green-600'
+              ? 'bg-brand-600 text-white shadow-sm'
+              : 'text-slate-600 hover:text-brand-600'
           }`}
         >
           <Map className="h-4 w-4 mr-2" />
@@ -30,10 +30,10 @@ const ViewToggle: React.FC = () => {
         <button
           type="button"
           onClick={() => handleViewChange('list')}
-          className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
+          className={`inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-xl transition-colors duration-200 ${
             viewMode === 'list'
-              ? 'bg-white text-green-600 shadow-sm'
-              : 'text-gray-700 hover:text-green-600'
+              ? 'bg-brand-600 text-white shadow-sm'
+              : 'text-slate-600 hover:text-brand-600'
           }`}
         >
           <List className="h-4 w-4 mr-2" />

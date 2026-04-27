@@ -5,14 +5,15 @@ import { FootballField } from '../../types';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-// Set Mapbox token from user specifications
-mapboxgl.accessToken = 'pk.eyJ1IjoibWF5ZG9udXoiLCJhIjoiY21iYmMzankwMWh6eTJycTU1MzZmaWVkciJ9.S5sor-3J3nKTUZIWtrASwQ';
+// Set Mapbox token from env
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN ?? '';
 
 const MapView: React.FC = () => {
   const { filteredFields } = useApp();
   const { translations } = useLanguage();
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const markersRef = useRef<mapboxgl.Marker[]>([]);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
 
@@ -56,8 +57,8 @@ const MapView: React.FC = () => {
     if (!mapLoaded || !map.current) return;
 
     // Remove existing markers
-    const existingMarkers = document.querySelectorAll('.mapboxgl-marker');
-    existingMarkers.forEach((marker) => marker.remove());
+    markersRef.current.forEach((marker) => marker.remove());
+    markersRef.current = [];
 
     // Add new markers for each field
     filteredFields.forEach((field) => {
@@ -73,7 +74,7 @@ const MapView: React.FC = () => {
     markerEl.className = 'field-marker';
     markerEl.style.width = '24px';
     markerEl.style.height = '24px';
-    markerEl.style.backgroundImage = `url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${field.available ? '%2316a34a' : '%23ef4444'}" stroke="white"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>')`;
+    markerEl.style.backgroundImage = `url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${(field.available ?? true) ? '%2316a34a' : '%23ef4444'}" stroke="white"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>')`;
     markerEl.style.backgroundSize = 'cover';
     markerEl.style.cursor = 'pointer';
 
@@ -94,11 +95,15 @@ const MapView: React.FC = () => {
       </div>
     `);
 
+    const [first, second] = field.coordinates;
+    const lngLat: [number, number] = first > 50 ? [first, second] : [second, first];
+
     // Create marker
-    new mapboxgl.Marker(markerEl)
-      .setLngLat(field.coordinates)
+    const marker = new mapboxgl.Marker(markerEl)
+      .setLngLat(lngLat)
       .setPopup(popup)
       .addTo(map.current);
+    markersRef.current.push(marker);
   };
 
 
@@ -114,7 +119,7 @@ const MapView: React.FC = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-soft border border-slate-200 overflow-hidden">
       <div
         ref={mapContainer}
         className="h-[600px] w-full"

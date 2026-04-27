@@ -13,7 +13,7 @@ const ListView: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, index) => (
           <FieldCardSkeleton key={index} />
         ))}
@@ -22,8 +22,8 @@ const ListView: React.FC = () => {
   }
 
   if (error) {
-    return (
-      <div className="flex items-center justify-center p-8">
+      return (
+      <div className="flex items-center justify-center p-10 rounded-2xl bg-white border border-slate-200">
         <div className="text-center">
           <p className="text-red-500 mb-2">{translations[error] || error}</p>
         </div>
@@ -33,9 +33,9 @@ const ListView: React.FC = () => {
 
   if (filteredFields.length === 0) {
     return (
-      <div className="flex items-center justify-center p-8">
+      <div className="flex items-center justify-center p-10 rounded-2xl bg-white border border-slate-200">
         <div className="text-center">
-          <p className="text-gray-600">{translations.noResults}</p>
+          <p className="text-slate-600">{translations.noResults}</p>
         </div>
       </div>
     );
@@ -43,7 +43,7 @@ const ListView: React.FC = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredFields.map((field) => (
           <FieldCard 
             key={field.id} 

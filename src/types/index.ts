@@ -1,3 +1,8 @@
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
 export interface FootballField {
   id: string;
   name: string;
@@ -6,12 +11,13 @@ export interface FootballField {
   size: string;
   price: number;
   rating: number;
-  coordinates: [number, number]; // [longitude, latitude]
+  coordinates: [number, number]; // [latitude, longitude]
   images: string[];
-  fieldType: string;
+  fieldType: 'mini' | 'standard' | 'futsal' | 'artificial' | 'natural' | 'modern';
   region: string;
-  ownerName: string;
+  ownerName: string | null;
   phone: string;
+  available?: boolean;
 }
 
 export interface SearchFilters {

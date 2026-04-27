@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { FootballField, SearchFilters, ViewMode } from '../types';
 import { mockFields } from '../data/mockData';
 
@@ -24,49 +24,86 @@ const AppContext = createContext<AppContextType>({
   setSearchFilters: () => {},
 });
 
+const normalizeText = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/['`ʻʼ’"]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const getAddressKey = (field: FootballField) =>
+  `${normalizeText(field.region)}|${normalizeText(field.district)}|${normalizeText(field.address)}`;
+
+const deduplicateByAddress = (items: FootballField[]): FootballField[] => {
+  const seen = new Set<string>();
+
+  return items.filter((field) => {
+    const key = getAddressKey(field);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
+const uniqueFields = deduplicateByAddress(mockFields);
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [fields] = useState<FootballField[]>(mockFields);
-  const [filteredFields, setFilteredFields] = useState<FootballField[]>(mockFields);
+  const [fields] = useState<FootballField[]>(uniqueFields);
+  const [filteredFields, setFilteredFields] = useState<FootballField[]>(uniqueFields);
   const [viewMode, setViewMode] = useState<ViewMode>('map');
   const [searchFilters, setSearchFiltersState] = useState<SearchFilters>({ query: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const searchTimeoutRef = useRef<number | null>(null);
 
   const setSearchFilters = useCallback((filters: Partial<SearchFilters>) => {
     setIsLoading(true);
     setError(null);
 
+    if (searchTimeoutRef.current !== null) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
     // Simulate API call delay
-    setTimeout(() => {
+    searchTimeoutRef.current = window.setTimeout(() => {
       try {
-        const newFilters = { ...searchFilters, ...filters };
-        setSearchFiltersState(newFilters);
+        setSearchFiltersState((prevFilters) => {
+          const newFilters = { ...prevFilters, ...filters };
 
-        // Filter fields based on search query
-        const filtered = fields.filter((field) => {
-          const matchesQuery = newFilters.query
-            ? field.name.toLowerCase().includes(newFilters.query.toLowerCase()) ||
-              field.district.toLowerCase().includes(newFilters.query.toLowerCase())
-            : true;
+          const filtered = fields.filter((field) => {
+            const matchesQuery = newFilters.query
+              ? field.name.toLowerCase().includes(newFilters.query.toLowerCase()) ||
+                field.district.toLowerCase().includes(newFilters.query.toLowerCase())
+              : true;
 
-          const matchesDistrict = newFilters.district
-            ? field.district === newFilters.district
-            : true;
+            const matchesDistrict = newFilters.district
+              ? field.district === newFilters.district
+              : true;
 
-          const matchesSize = newFilters.size ? field.size === newFilters.size : true;
+            const matchesSize = newFilters.size ? field.size === newFilters.size : true;
 
-          return matchesQuery && matchesDistrict && matchesSize;
+            return matchesQuery && matchesDistrict && matchesSize;
+          });
+
+          setFilteredFields(filtered);
+          setIsLoading(false);
+          return newFilters;
         });
-
-        setFilteredFields(filtered);
-        setIsLoading(false);
       } catch {
         setError('networkError');
         setFilteredFields(fields);
         setIsLoading(false);
       }
     }, 500);
-  }, [fields, searchFilters]);
+  }, [fields]);
+
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current !== null) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
 
   return (

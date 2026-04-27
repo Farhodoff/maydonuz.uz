@@ -13,7 +13,7 @@ const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
 
   return (
     <div 
-      className="bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-lg cursor-pointer"
+      className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all hover:-translate-y-1 hover:shadow-soft cursor-pointer"
       onClick={() => onFieldClick(field)}
     >
       <div className="relative h-48">
@@ -22,15 +22,23 @@ const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
           alt={field.name} 
           className="w-full h-full object-cover"
         />
+        <div className="absolute inset-x-0 top-0 flex justify-between p-3">
+          <span className="rounded-full bg-black/65 px-3 py-1 text-xs font-medium text-white">
+            {field.fieldType}
+          </span>
+          <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-700">
+            {field.region}
+          </span>
+        </div>
       </div>
       
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900">{field.name}</h3>
-        <p className="text-gray-600 text-sm">{field.district}</p>
+      <div className="p-5">
+        <h3 className="text-lg font-semibold text-slate-900">{field.name}</h3>
+        <p className="text-slate-500 text-sm">{field.district}</p>
         
         <div className="mt-3 flex items-center justify-between">
           <div className="flex items-center">
-            <span className="text-gray-700 text-sm">{translations.size}:</span>
+            <span className="text-slate-600 text-sm">{translations.size}:</span>
             <span className="ml-1 text-sm font-medium">{field.size}</span>
           </div>
           
@@ -40,9 +48,14 @@ const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
           </div>
         </div>
         
-        <div className="mt-3">
-          <span className="text-gray-700 text-sm">{translations.price}:</span>
-          <span className="ml-1 text-green-700 font-semibold">{field.price.toLocaleString()} {translations.perHour}</span>
+        <div className="mt-3 flex items-end justify-between">
+          <div>
+            <span className="text-slate-600 text-sm">{translations.price}:</span>
+            <span className="ml-1 text-brand-700 font-semibold">{field.price.toLocaleString()} {translations.perHour}</span>
+          </div>
+          <span className="text-xs text-slate-500">
+            {field.ownerName ?? 'Egasi ko‘rsatilmagan'}
+          </span>
         </div>
       </div>
     </div>
