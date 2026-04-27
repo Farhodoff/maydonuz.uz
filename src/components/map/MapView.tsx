@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { FootballField } from '../../types';
@@ -16,12 +16,32 @@ const MapView: React.FC = () => {
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapError, setMapError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
-  // Initialize map when component mounts
-  useEffect(() => {
+  const initMap = useCallback(() => {
     if (!mapContainer.current) return;
+    
+    // Reset state
+    setMapError(null);
+    setMapLoaded(false);
 
     try {
+      // Check if WebGL is supported
+      if (!mapboxgl.supported()) {
+        setMapError('Your browser does not support WebGL, which is required to display the map.');
+        return;
+      }
+
+      // Check if token is present
+      if (!mapboxgl.accessToken) {
+        setMapError('Mapbox access token is missing. Please check your configuration.');
+        return;
+      }
+
+      if (map.current) {
+        map.current.remove();
+      }
+
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/streets-v12',
@@ -41,16 +61,31 @@ const MapView: React.FC = () => {
         setMapLoaded(true);
       });
 
-      return () => {
-        if (map.current) {
-          map.current.remove();
+      map.current.on('error', (e) => {
+        console.error('Mapbox error:', e);
+        // Don't show full error screen for minor issues, but log it
+        if (!mapLoaded) {
+          setMapError('Failed to load map style. This might be a network issue.');
         }
-      };
-    } catch (error) {
+      });
+
+    } catch (error: any) {
       console.error('Error initializing map:', error);
-      setMapError('Failed to load map. Please try again later.');
+      setMapError(error?.message || 'Failed to initialize map. Please try again later.');
     }
-  }, []);
+  }, [mapLoaded]);
+
+  // Initialize map when component mounts or retry changes
+  useEffect(() => {
+    initMap();
+
+    return () => {
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
+  }, [retryCount]);
 
   // Add markers when fields or map changes
   useEffect(() => {
@@ -109,10 +144,21 @@ const MapView: React.FC = () => {
 
   if (mapError) {
     return (
-      <div className="h-[600px] flex items-center justify-center bg-gray-100 rounded-lg">
-        <div className="text-center p-6">
-          <p className="text-red-500 mb-4">{mapError}</p>
-          <p className="text-gray-600">{translations.networkError}</p>
+      <div className="h-[600px] flex items-center justify-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+        <div className="text-center p-8 max-w-md">
+          <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <p className="text-slate-900 font-semibold text-lg mb-2">{mapError}</p>
+          <p className="text-slate-500 mb-6">{translations.networkError}</p>
+          <button
+            onClick={() => setRetryCount(prev => prev + 1)}
+            className="px-6 py-2 bg-brand-600 text-white rounded-full font-medium hover:bg-brand-700 transition-colors shadow-lg shadow-brand-200"
+          >
+            Qayta urinish
+          </button>
         </div>
       </div>
     );
