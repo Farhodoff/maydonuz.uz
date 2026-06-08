@@ -47,9 +47,27 @@ const deduplicateByAddress = (items: FootballField[]): FootballField[] => {
 
 const sortFieldsByImage = (items: FootballField[]): FootballField[] => {
   return [...items].sort((a, b) => {
+    // Check if fields have images
     const aHasImage = a.images && a.images.length > 0 && a.images[0] ? 1 : 0;
     const bHasImage = b.images && b.images.length > 0 && b.images[0] ? 1 : 0;
-    return bHasImage - aHasImage;
+    
+    // Primary sort: fields with images first
+    if (aHasImage !== bHasImage) {
+      return bHasImage - aHasImage;
+    }
+    
+    // Secondary sort: by rating (highest first)
+    if (a.rating !== b.rating) {
+      return b.rating - a.rating;
+    }
+    
+    // Tertiary sort: by price (lowest first)
+    if (a.price !== b.price) {
+      return a.price - b.price;
+    }
+    
+    // Quaternary sort: by name for consistency
+    return a.name.localeCompare(b.name);
   });
 };
 

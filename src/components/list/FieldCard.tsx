@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Star, Image as ImageIcon } from 'lucide-react';
 import { FootballField } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -10,18 +10,28 @@ interface FieldCardProps {
 
 const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
   const { translations } = useLanguage();
+  const hasImage = field.images && field.images.length > 0 && field.images[0];
 
   return (
     <div 
       className="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all hover:-translate-y-1 hover:shadow-soft cursor-pointer"
       onClick={() => onFieldClick(field)}
     >
-      <div className="relative h-48">
-        <img 
-          src={field.images[0]} 
-          alt={field.name} 
-          className="w-full h-full object-cover"
-        />
+      <div className="relative h-48 bg-slate-100">
+        {hasImage ? (
+          <img 
+            src={field.images[0]} 
+            alt={field.name} 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+            <div className="text-center">
+              <ImageIcon className="h-12 w-12 text-slate-400 mx-auto mb-2" />
+              <p className="text-xs text-slate-500">Rasm mavjud emas</p>
+            </div>
+          </div>
+        )}
         <div className="absolute inset-x-0 top-0 flex justify-between p-3">
           <span className="rounded-full bg-black/65 px-3 py-1 text-xs font-medium text-white">
             {field.fieldType}
@@ -30,6 +40,11 @@ const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
             {field.region}
           </span>
         </div>
+        {!hasImage && (
+          <div className="absolute top-3 left-3 rounded-full bg-yellow-500/90 px-2 py-1 text-xs font-semibold text-white">
+            📸
+          </div>
+        )}
       </div>
       
       <div className="p-5">
