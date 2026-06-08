@@ -2,38 +2,38 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import { FilterOption } from '../../types';
-
-const regions: FilterOption[] = [
-  { value: 'tashkent', label: 'Toshkent viloyat' },
-  { value: 'samarkand', label: 'Samarqand' },
-  { value: 'fergana', label: 'Farg\'ona' },
-  { value: 'andijan', label: 'Andijon' },
-];
-
-const fieldTypes: FilterOption[] = [
-  { value: 'artificial', label: 'Sun\'iy' },
-  { value: 'natural', label: 'Tabiiy' },
-  { value: 'modern', label: 'Zamonaviy' },
-  { value: 'indoor', label: 'Yopiq' },
-];
-
-const sizes: FilterOption[] = [
-  { value: '5x5', label: '5x5' },
-  { value: '7x7', label: '7x7' },
-  { value: '11x11', label: '11x11' },
-];
-
-const districts: FilterOption[] = [
-  { value: 'yunusabad', label: 'Yunusobod' },
-  { value: 'chilanzar', label: 'Chilonzor' },
-  { value: 'shayhantahur', label: 'Shayxontoxur' },
-  { value: 'almazar', label: 'Olmazor' },
-];
-
-// const apiUrl = import.meta.env.VITE_API_URL; // Olib tashlang
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const Filters: React.FC = () => {
   const { searchFilters, setSearchFilters } = useApp();
+  const { translations } = useLanguage();
+
+  const regions: FilterOption[] = [
+    { value: 'tashkent', label: translations.tashkentRegion },
+    { value: 'samarkand', label: translations.samarkand },
+    { value: 'fergana', label: translations.fergana },
+    { value: 'andijan', label: translations.andijan },
+  ];
+
+  const fieldTypes: FilterOption[] = [
+    { value: 'artificial', label: translations.artificial },
+    { value: 'natural', label: translations.natural },
+    { value: 'modern', label: translations.modern },
+    { value: 'indoor', label: translations.indoor },
+  ];
+
+  const sizes: FilterOption[] = [
+    { value: '5x5', label: '5x5' },
+    { value: '7x7', label: '7x7' },
+    { value: '11x11', label: '11x11' },
+  ];
+
+  const districts: FilterOption[] = [
+    { value: 'yunusabad', label: translations.yunusabad },
+    { value: 'chilanzar', label: translations.chilanzar },
+    { value: 'shayhantahur', label: translations.shayhantahur },
+    { value: 'almazar', label: translations.almazar },
+  ];
 
   const handleFilterChange = (key: string, value: string) => {
     setSearchFilters({ ...searchFilters, [key]: value });
@@ -44,7 +44,8 @@ const Filters: React.FC = () => {
     options: FilterOption[];
     value: string;
     onChange: (value: string) => void;
-  }> = ({ label, options, value, onChange }) => (
+    placeholder: string;
+  }> = ({ label, options, value, onChange, placeholder }) => (
     <div className="w-full md:w-auto">
       <label className="block text-sm font-medium text-gray-700 mb-1">
         {label}
@@ -55,7 +56,7 @@ const Filters: React.FC = () => {
           onChange={(e) => onChange(e.target.value)}
           className="w-full appearance-none rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-500 cursor-pointer"
         >
-          <option value="">{`${label}ni tanlang`}</option>
+          <option value="">{placeholder}</option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -71,28 +72,32 @@ const Filters: React.FC = () => {
     <div className="w-full max-w-4xl mx-auto px-4 mt-4">
       <div className="flex flex-col md:flex-row gap-4">
         <SelectFilter
-          label="Viloyat"
+          label={translations.region}
           options={regions}
           value={searchFilters.region || ''}
           onChange={(value) => handleFilterChange('region', value)}
+          placeholder={translations.selectRegion}
         />
         <SelectFilter
-          label="Maydon turi"
+          label={translations.fieldType}
           options={fieldTypes}
           value={searchFilters.fieldType || ''}
           onChange={(value) => handleFilterChange('fieldType', value)}
+          placeholder={translations.selectFieldType}
         />
         <SelectFilter
-          label="O'lcham"
+          label={translations.size}
           options={sizes}
           value={searchFilters.size || ''}
           onChange={(value) => handleFilterChange('size', value)}
+          placeholder={translations.selectSize}
         />
         <SelectFilter
-          label="Tuman"
+          label={translations.district}
           options={districts}
           value={searchFilters.district || ''}
           onChange={(value) => handleFilterChange('district', value)}
+          placeholder={translations.selectDistrict}
         />
       </div>
     </div>
