@@ -26,6 +26,7 @@ export interface SearchFilters {
   size?: string;
   region?: string;
   fieldType?: string;
+  sortBy?: string;
 }
 
 export type ViewMode = 'map' | 'list';

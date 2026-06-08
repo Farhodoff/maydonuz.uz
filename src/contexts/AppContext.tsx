@@ -45,7 +45,32 @@ const deduplicateByAddress = (items: FootballField[]): FootballField[] => {
   });
 };
 
-const sortFieldsByImage = (items: FootballField[]): FootballField[] => {
+const matchFilter = (filterValue: string, fieldValue: string): boolean => {
+  if (!filterValue) return true;
+  
+  const fVal = filterValue.toLowerCase();
+  const dbVal = fieldValue.toLowerCase();
+  
+  const normalizationMap: Record<string, string[]> = {
+    'tashkent': ['tashkent', 'toshkent'],
+    'samarkand': ['samarkand', 'samarqand'],
+    'fergana': ['fergana', 'fargona', 'farg\'ona'],
+    'andijan': ['andijan', 'andijon'],
+    'yunusabad': ['yunusabad', 'yunusobod'],
+    'chilanzar': ['chilanzar', 'chilonzor'],
+    'shayhantahur': ['shayhantahur', 'shayxontoxur', 'shayxontohur'],
+    'almazar': ['almazar', 'olmazor'],
+    'yashnabad': ['yashnabad', 'yashnobod'],
+  };
+
+  if (normalizationMap[fVal]) {
+    return normalizationMap[fVal].some(val => dbVal.includes(val));
+  }
+
+  return dbVal.includes(fVal) || fVal.includes(dbVal);
+};
+
+const sortFieldsByImage = (items: FootballField[], sortBy?: string): FootballField[] => {
   return [...items].sort((a, b) => {
     // Check if fields have images
     const aHasImage = a.images && a.images.length > 0 && a.images[0] ? 1 : 0;
@@ -54,6 +79,15 @@ const sortFieldsByImage = (items: FootballField[]): FootballField[] => {
     // Primary sort: fields with images first
     if (aHasImage !== bHasImage) {
       return bHasImage - aHasImage;
+    }
+    
+    // User selected sorting
+    if (sortBy === 'price_asc') {
+      return a.price - b.price;
+    } else if (sortBy === 'price_desc') {
+      return b.price - a.price;
+    } else if (sortBy === 'rating_desc') {
+      return b.rating - a.rating;
     }
     
     // Secondary sort: by rating (highest first)
@@ -102,16 +136,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                 field.district.toLowerCase().includes(newFilters.query.toLowerCase())
               : true;
 
-            const matchesDistrict = newFilters.district
-              ? field.district === newFilters.district
+            const matchesRegion = newFilters.region
+              ? matchFilter(newFilters.region, field.region)
               : true;
 
-            const matchesSize = newFilters.size ? field.size === newFilters.size : true;
+            const matchesFieldType = newFilters.fieldType
+              ? matchFilter(newFilters.fieldType, field.fieldType)
+              : true;
 
-            return matchesQuery && matchesDistrict && matchesSize;
+            const matchesDistrict = newFilters.district
+              ? matchFilter(newFilters.district, field.district)
+              : true;
+
+            const matchesSize = newFilters.size
+              ? matchFilter(newFilters.size, field.size)
+              : true;
+
+            return matchesQuery && matchesRegion && matchesFieldType && matchesDistrict && matchesSize;
           });
 
-          setFilteredFields(sortFieldsByImage(filtered));
+          setFilteredFields(sortFieldsByImage(filtered, newFilters.sortBy));
           setIsLoading(false);
           return newFilters;
         });

@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/common/Navbar';
 import SearchBar from '../components/search/SearchBar';
+import Filters from '../components/search/Filters';
 import ViewToggle from '../components/common/ViewToggle';
 import MapView from '../components/map/MapView';
 import ListView from '../components/list/ListView';
@@ -33,6 +34,7 @@ const HomePage: React.FC = () => {
             </p>
 
             <SearchBar />
+            <Filters />
 
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Globe, Menu, X, LogOut, Key, User, ChevronDown } from 'lucide-react';
+import { Globe, Menu, X, LogOut, Key, User, ChevronDown, Calendar } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Language } from '../../types';
 import AuthModal, { AuthModalMode } from '../modals/AuthModal';
+import MyBookingsModal from '../modals/MyBookingsModal';
 
 const Navbar: React.FC = () => {
   const { language, setLanguage, translations } = useLanguage();
@@ -15,6 +16,8 @@ const Navbar: React.FC = () => {
   
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<AuthModalMode>('login');
+  
+  const [isMyBookingsModalOpen, setIsMyBookingsModalOpen] = useState(false);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const toggleLanguageDropdown = () => setIsLanguageDropdownOpen(!isLanguageDropdownOpen);
@@ -110,6 +113,16 @@ const Navbar: React.FC = () => {
                           <Key className="h-4 w-4 mr-2.5 text-slate-500" />
                           {translations.changePassword}
                         </button>
+                        <button
+                          onClick={() => {
+                            setIsMyBookingsModalOpen(true);
+                            setIsUserDropdownOpen(false);
+                          }}
+                          className="flex w-full items-center text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 font-medium"
+                        >
+                          <Calendar className="h-4 w-4 mr-2.5 text-slate-500" />
+                          {translations.bookingHistory}
+                        </button>
                       </div>
                       <div className="py-1">
                         <button
@@ -195,6 +208,15 @@ const Navbar: React.FC = () => {
                     {translations.changePassword}
                   </button>
                   <button
+                    onClick={() => {
+                      setIsMyBookingsModalOpen(true);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="block w-full text-left py-2 text-sm text-slate-700 font-medium hover:text-brand-600"
+                  >
+                    {translations.bookingHistory}
+                  </button>
+                  <button
                     onClick={handleLogout}
                     className="block w-full text-left py-2 text-sm text-red-600 font-medium hover:text-red-700"
                   >
@@ -226,6 +248,11 @@ const Navbar: React.FC = () => {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         initialMode={authModalMode}
+      />
+
+      <MyBookingsModal
+        isOpen={isMyBookingsModalOpen}
+        onClose={() => setIsMyBookingsModalOpen(false)}
       />
     </>
   );

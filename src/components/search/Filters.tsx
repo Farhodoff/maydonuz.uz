@@ -68,9 +68,15 @@ const Filters: React.FC = () => {
     </div>
   );
 
+  const sortOptions: FilterOption[] = [
+    { value: 'rating_desc', label: translations.ratingDesc },
+    { value: 'price_asc', label: translations.priceAsc },
+    { value: 'price_desc', label: translations.priceDesc },
+  ];
+
   return (
     <div className="w-full max-w-4xl mx-auto px-4 mt-4">
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
         <SelectFilter
           label={translations.region}
           options={regions}
@@ -98,6 +104,13 @@ const Filters: React.FC = () => {
           value={searchFilters.district || ''}
           onChange={(value) => handleFilterChange('district', value)}
           placeholder={translations.selectDistrict}
+        />
+        <SelectFilter
+          label={translations.sortBy}
+          options={sortOptions}
+          value={searchFilters.sortBy || ''}
+          onChange={(value) => handleFilterChange('sortBy', value)}
+          placeholder={translations.selectSort}
         />
       </div>
     </div>
