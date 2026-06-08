@@ -73,7 +73,19 @@ const translations: Record<Language, Record<string, string>> = {
     'about': 'Biz haqimizda',
     'fields': 'Maydonlar',
     'guide': 'Qo\'llanma',
-    'allRightsReserved': 'Barcha huquqlar himoyalangan.'
+    'allRightsReserved': 'Barcha huquqlar himoyalangan.',
+    'name': 'Ism',
+    'confirmPassword': 'Parolni tasdiqlang',
+    'editProfile': 'Profilni tahrirlash',
+    'changePassword': 'Parolni o‘zgartirish',
+    'oldPassword': 'Eski parol',
+    'newPassword': 'Yangi parol',
+    'save': 'Saqlash',
+    'logout': 'Chiqish',
+    'loginToViewPhone': 'Telefon raqamini ko‘rish uchun tizimga kiring',
+    'loginRequiredTitle': 'Kirish talab etiladi',
+    'dontHaveAccount': 'Akkauntingiz yo‘qmi? Ro‘yxatdan o‘tish',
+    'alreadyHaveAccount': 'Akkauntingiz bormi? Kirish'
   },
   'ru': {
     'appName': 'Maydon.uz',
@@ -130,7 +142,19 @@ const translations: Record<Language, Record<string, string>> = {
     'about': 'О нас',
     'fields': 'Поля',
     'guide': 'Руководство',
-    'allRightsReserved': 'Все права защищены.'
+    'allRightsReserved': 'Все права защищены.',
+    'name': 'Имя',
+    'confirmPassword': 'Подтвердите пароль',
+    'editProfile': 'Редактировать профиль',
+    'changePassword': 'Изменить пароль',
+    'oldPassword': 'Старый пароль',
+    'newPassword': 'Новый пароль',
+    'save': 'Сохранить',
+    'logout': 'Выйти',
+    'loginToViewPhone': 'Войдите, чтобы увидеть телефон',
+    'loginRequiredTitle': 'Требуется вход',
+    'dontHaveAccount': 'Нет аккаунта? Зарегистрироваться',
+    'alreadyHaveAccount': 'Уже есть аккаунт? Войти'
   }
 };
 
