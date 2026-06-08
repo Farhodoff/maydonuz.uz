@@ -4,7 +4,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { Language } from '../../types';
 
 const Navbar: React.FC = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, translations } = useLanguage();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex-shrink-0 flex items-center">
-            <h1 className="text-xl font-extrabold text-brand-600 tracking-tight">Maydon.uz</h1>
+            <h1 className="text-xl font-extrabold text-brand-600 tracking-tight">{translations.appName}</h1>
           </div>
 
           {/* Desktop navigation */}

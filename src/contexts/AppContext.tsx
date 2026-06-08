@@ -45,7 +45,15 @@ const deduplicateByAddress = (items: FootballField[]): FootballField[] => {
   });
 };
 
-const uniqueFields = deduplicateByAddress(mockFields);
+const sortFieldsByImage = (items: FootballField[]): FootballField[] => {
+  return [...items].sort((a, b) => {
+    const aHasImage = a.images && a.images.length > 0 && a.images[0] ? 1 : 0;
+    const bHasImage = b.images && b.images.length > 0 && b.images[0] ? 1 : 0;
+    return bHasImage - aHasImage;
+  });
+};
+
+const uniqueFields = sortFieldsByImage(deduplicateByAddress(mockFields));
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [fields] = useState<FootballField[]>(uniqueFields);
@@ -85,7 +93,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             return matchesQuery && matchesDistrict && matchesSize;
           });
 
-          setFilteredFields(filtered);
+          setFilteredFields(sortFieldsByImage(filtered));
           setIsLoading(false);
           return newFilters;
         });

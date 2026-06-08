@@ -92,7 +92,7 @@ const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose })
                     </a>
                   </div>
                   <div className="text-gray-600">
-                    <span className="font-medium">O'lcham:</span> {field.size}
+                    <span className="font-medium">{translations.size}:</span> {field.size}
                   </div>
                   <div className="text-gray-600">
                     <span className="font-medium">{translations.price}:</span> {field.price.toLocaleString()} {translations.perHour}

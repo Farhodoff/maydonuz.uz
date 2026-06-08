@@ -157,7 +157,7 @@ const MapView: React.FC = () => {
             onClick={() => setRetryCount(prev => prev + 1)}
             className="px-6 py-2 bg-brand-600 text-white rounded-full font-medium hover:bg-brand-700 transition-colors shadow-lg shadow-brand-200"
           >
-            Qayta urinish
+            {translations.retry}
           </button>
         </div>
       </div>

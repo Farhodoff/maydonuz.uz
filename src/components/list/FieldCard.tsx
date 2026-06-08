@@ -54,7 +54,7 @@ const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
             <span className="ml-1 text-brand-700 font-semibold">{field.price.toLocaleString()} {translations.perHour}</span>
           </div>
           <span className="text-xs text-slate-500">
-            {field.ownerName ?? 'Egasi ko‘rsatilmagan'}
+            {field.ownerName ?? translations.ownerNotSpecified}
           </span>
         </div>
       </div>
