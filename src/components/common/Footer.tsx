@@ -1,15 +1,18 @@
 import React from 'react';
 import { PhoneCall, Mail, MapPin } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const Footer: React.FC = () => {
+  const { translations } = useLanguage();
+  
   return (
     <footer className="bg-slate-900 text-white mt-16">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h2 className="text-xl font-bold text-brand-500 mb-4">Maydon.uz</h2>
+            <h2 className="text-xl font-bold text-brand-500 mb-4">{translations.appName}</h2>
             <p className="text-slate-300 mb-4">
-              Futbol maydonlarini qidirib, band qilish platformasi
+              {translations.heroDesc}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-slate-400 hover:text-white">
@@ -34,7 +37,7 @@ const Footer: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-4">Aloqa</h3>
+            <h3 className="text-lg font-semibold mb-4">{translations.contact}</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
                 <PhoneCall className="h-5 w-5 text-brand-500 mr-2 mt-0.5" />
@@ -52,29 +55,29 @@ const Footer: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-4">Sahifalar</h3>
+            <h3 className="text-lg font-semibold mb-4">{translations.pages}</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-slate-300 hover:text-white transition-colors">Bosh sahifa</a>
+                <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.home}</a>
               </li>
               <li>
-                <a href="#" className="text-slate-300 hover:text-white transition-colors">Biz haqimizda</a>
+                <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.about}</a>
               </li>
               <li>
-                <a href="#" className="text-slate-300 hover:text-white transition-colors">Maydonlar</a>
+                <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.fields}</a>
               </li>
               <li>
-                <a href="#" className="text-slate-300 hover:text-white transition-colors">Qo'llanma</a>
+                <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.guide}</a>
               </li>
               <li>
-                <a href="#" className="text-slate-300 hover:text-white transition-colors">Aloqa</a>
+                <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.contact}</a>
               </li>
             </ul>
           </div>
         </div>
         
         <div className="mt-8 pt-8 border-t border-slate-700">
-          <p className="text-slate-400 text-center">© {new Date().getFullYear()} Maydon.uz. Barcha huquqlar himoyalangan.</p>
+          <p className="text-slate-400 text-center">© {new Date().getFullYear()} {translations.appName}. {translations.allRightsReserved}</p>
         </div>
       </div>
     </footer>
