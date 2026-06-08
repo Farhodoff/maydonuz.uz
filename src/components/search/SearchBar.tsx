@@ -46,7 +46,7 @@ const SearchBar: React.FC = () => {
           type="submit"
           className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
         >
-          Qidirish
+          {translations.searchBtn}
         </button>
       </form>
     </div>
