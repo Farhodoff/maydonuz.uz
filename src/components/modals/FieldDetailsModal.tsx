@@ -155,15 +155,17 @@ const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose })
                       <MapPin className="h-5 w-5 mr-2.5 text-green-600 flex-shrink-0" />
                       <div className="flex flex-col text-left">
                         <span className="text-sm font-medium">{field.district}, {field.region}</span>
-                        <a 
-                          href={`https://www.google.com/maps/dir/?api=1&destination=${field.coordinates[0]},${field.coordinates[1]}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-brand-600 hover:text-brand-700 hover:underline font-bold mt-1 flex items-center"
-                        >
-                          <Navigation className="h-3.5 w-3.5 mr-1" />
-                          Google Xaritada navigatsiya
-                        </a>
+                        {isLoggedIn && (
+                          <a 
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${field.coordinates[0]},${field.coordinates[1]}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-brand-600 hover:text-brand-700 hover:underline font-bold mt-1 flex items-center"
+                          >
+                            <Navigation className="h-3.5 w-3.5 mr-1" />
+                            Google Xaritada navigatsiya
+                          </a>
+                        )}
                       </div>
                     </div>
                     
