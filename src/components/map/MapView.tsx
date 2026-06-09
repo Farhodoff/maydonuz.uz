@@ -144,7 +144,7 @@ const MapView: React.FC = () => {
 
   if (mapError) {
     return (
-      <div className="h-[600px] flex items-center justify-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+      <div className="h-[400px] sm:h-[500px] md:h-[600px] flex items-center justify-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
         <div className="text-center p-8 max-w-md">
           <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,7 +168,7 @@ const MapView: React.FC = () => {
     <div className="bg-white rounded-2xl shadow-soft border border-slate-200 overflow-hidden">
       <div
         ref={mapContainer}
-        className="h-[600px] w-full"
+        className="h-[400px] sm:h-[500px] md:h-[600px] w-full"
         style={{ position: 'relative' }}
       />
     </div>
