@@ -11,6 +11,7 @@ interface AppContextType {
   error: string | null;
   setViewMode: (mode: ViewMode) => void;
   setSearchFilters: (filters: Partial<SearchFilters>) => void;
+  addField: (field: FootballField) => void;
 }
 
 const AppContext = createContext<AppContextType>({
@@ -22,6 +23,7 @@ const AppContext = createContext<AppContextType>({
   error: null,
   setViewMode: () => {},
   setSearchFilters: () => {},
+  addField: () => {},
 });
 
 const normalizeText = (value: string) =>
@@ -108,15 +110,67 @@ const sortFieldsByImage = (items: FootballField[], sortBy?: string): FootballFie
 const uniqueFields = sortFieldsByImage(deduplicateByAddress(mockFields));
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [fields] = useState<FootballField[]>(uniqueFields);
-  const [filteredFields, setFilteredFields] = useState<FootballField[]>(uniqueFields);
+  const [fields, setFieldsState] = useState<FootballField[]>([]);
+  const [filteredFields, setFilteredFields] = useState<FootballField[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [searchFilters, setSearchFiltersState] = useState<SearchFilters>({ query: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const searchTimeoutRef = useRef<number | null>(null);
 
-  const setSearchFilters = useCallback((filters: Partial<SearchFilters>) => {
+  // Initialize fields with uniqueFields + customFields on mount
+  useEffect(() => {
+    const customFieldsRaw = localStorage.getItem('maydon_custom_fields');
+    let customFields: FootballField[] = [];
+    if (customFieldsRaw) {
+      try {
+        customFields = JSON.parse(customFieldsRaw);
+      } catch (e) {
+        console.error('Error parsing custom fields', e);
+      }
+    }
+    setFieldsState(sortFieldsByImage([...customFields, ...uniqueFields]));
+  }, []);
+
+  const runFiltering = useCallback((allFields: FootballField[], filters: SearchFilters) => {
+    try {
+      const filtered = allFields.filter((field) => {
+        const matchesQuery = filters.query
+          ? field.name.toLowerCase().includes(filters.query.toLowerCase()) ||
+            field.district.toLowerCase().includes(filters.query.toLowerCase())
+          : true;
+
+        const matchesRegion = filters.region
+          ? matchFilter(filters.region, field.region)
+          : true;
+
+        const matchesFieldType = filters.fieldType
+          ? matchFilter(filters.fieldType, field.fieldType)
+          : true;
+
+        const matchesDistrict = filters.district
+          ? matchFilter(filters.district, field.district)
+          : true;
+
+        const matchesSize = filters.size
+          ? matchFilter(filters.size, field.size)
+          : true;
+
+        return matchesQuery && matchesRegion && matchesFieldType && matchesDistrict && matchesSize;
+      });
+
+      setFilteredFields(sortFieldsByImage(filtered, filters.sortBy));
+    } catch {
+      setError('networkError');
+      setFilteredFields(allFields);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Whenever fields changes, or searchFilters changes, re-run filtering (debounced)
+  useEffect(() => {
+    if (fields.length === 0) return; // wait for initialization
     setIsLoading(true);
     setError(null);
 
@@ -124,57 +178,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Simulate API call delay
     searchTimeoutRef.current = window.setTimeout(() => {
-      try {
-        setSearchFiltersState((prevFilters) => {
-          const newFilters = { ...prevFilters, ...filters };
+      runFiltering(fields, searchFilters);
+    }, 400);
 
-          const filtered = fields.filter((field) => {
-            const matchesQuery = newFilters.query
-              ? field.name.toLowerCase().includes(newFilters.query.toLowerCase()) ||
-                field.district.toLowerCase().includes(newFilters.query.toLowerCase())
-              : true;
-
-            const matchesRegion = newFilters.region
-              ? matchFilter(newFilters.region, field.region)
-              : true;
-
-            const matchesFieldType = newFilters.fieldType
-              ? matchFilter(newFilters.fieldType, field.fieldType)
-              : true;
-
-            const matchesDistrict = newFilters.district
-              ? matchFilter(newFilters.district, field.district)
-              : true;
-
-            const matchesSize = newFilters.size
-              ? matchFilter(newFilters.size, field.size)
-              : true;
-
-            return matchesQuery && matchesRegion && matchesFieldType && matchesDistrict && matchesSize;
-          });
-
-          setFilteredFields(sortFieldsByImage(filtered, newFilters.sortBy));
-          setIsLoading(false);
-          return newFilters;
-        });
-      } catch {
-        setError('networkError');
-        setFilteredFields(fields);
-        setIsLoading(false);
-      }
-    }, 500);
-  }, [fields]);
-
-  useEffect(() => {
     return () => {
       if (searchTimeoutRef.current !== null) {
         clearTimeout(searchTimeoutRef.current);
       }
     };
+  }, [fields, searchFilters, runFiltering]);
+
+  const setSearchFilters = useCallback((filters: Partial<SearchFilters>) => {
+    setSearchFiltersState((prev) => ({ ...prev, ...filters }));
   }, []);
 
+  const addField = useCallback((newField: FootballField) => {
+    setFieldsState((prev) => {
+      const updated = [newField, ...prev];
+      const customFieldsOnly = updated.filter(f => f.ownerId);
+      localStorage.setItem('maydon_custom_fields', JSON.stringify(customFieldsOnly));
+      return updated;
+    });
+  }, []);
 
   return (
     <AppContext.Provider
@@ -187,6 +213,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         error,
         setViewMode,
         setSearchFilters,
+        addField,
       }}
     >
       {children}

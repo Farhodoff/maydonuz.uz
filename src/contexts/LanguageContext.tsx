@@ -105,7 +105,23 @@ const translations: Record<Language, Record<string, string>> = {
     'status': 'Holati',
     'unpaid': 'To‘lanmagan',
     'paid': 'To‘langan',
-    'cancelled': 'Bekor qilingan'
+    'cancelled': 'Bekor qilingan',
+    'ownerPanel': 'Egalik paneli',
+    'myFields': 'Mening maydonlarim',
+    'addField': 'Yangi maydon qo\'shish',
+    'incomingBookings': 'Kelgan buyurtmalar',
+    'fieldName': 'Maydon nomi',
+    'fieldNamePlaceholder': 'Maydon nomini kiriting',
+    'address': 'Manzil',
+    'addressPlaceholder': 'To\'liq manzilni kiriting',
+    'pricePerHour': 'Soatbay narxi',
+    'latitude': 'Kenglik (Latitude)',
+    'longitude': 'Uzunlik (Longitude)',
+    'imageUrl': 'Rasm havolasi (URL)',
+    'saveField': 'Maydonni saqlash',
+    'fieldAddedSuccess': 'Yangi maydon muvaffaqiyatli qo\'shildi!',
+    'noFieldsYet': 'Sizda hali qo\'shilgan maydonlar yo\'q.',
+    'noIncomingBookings': 'Kelgan buyurtmalar mavjud emas.'
   },
   'ru': {
     'appName': 'Maydon.uz',
@@ -194,7 +210,23 @@ const translations: Record<Language, Record<string, string>> = {
     'status': 'Статус',
     'unpaid': 'Не оплачено',
     'paid': 'Оплачено',
-    'cancelled': 'Отменено'
+    'cancelled': 'Отменено',
+    'ownerPanel': 'Панель владельца',
+    'myFields': 'Мои поля',
+    'addField': 'Добавить поле',
+    'incomingBookings': 'Входящие брони',
+    'fieldName': 'Название поля',
+    'fieldNamePlaceholder': 'Введите название поля',
+    'address': 'Адрес',
+    'addressPlaceholder': 'Введите полный адрес',
+    'pricePerHour': 'Цена за час',
+    'latitude': 'Широта (Latitude)',
+    'longitude': 'Долгота (Longitude)',
+    'imageUrl': 'Ссылка на изображение (URL)',
+    'saveField': 'Сохранить поле',
+    'fieldAddedSuccess': 'Новое поле успешно добавлено!',
+    'noFieldsYet': 'У вас пока нет добавленных полей.',
+    'noIncomingBookings': 'Входящих броней пока нет.'
   }
 };
 

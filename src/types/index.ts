@@ -18,6 +18,7 @@ export interface FootballField {
   ownerName: string | null;
   phone: string;
   available?: boolean;
+  ownerId?: string;
 }
 
 export interface SearchFilters {
