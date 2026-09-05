@@ -19,7 +19,7 @@ const getInitialLanguage = (): Language => {
 
 const translations: Record<Language, Record<string, string>> = {
   'uz': {
-    'appName': 'Maydon.uz',
+    'appName': 'Maydonuz',
     'search': 'Maydonlarni qidiring...',
     'map': 'Xarita',
     'list': 'Ro\'yxat',
@@ -123,7 +123,7 @@ const translations: Record<Language, Record<string, string>> = {
     'noFieldsYet': 'Sizda hali qo\'shilgan maydonlar yo\'q.',
     'noIncomingBookings': 'Kelgan buyurtmalar mavjud emas.',
     'shareTelegram': 'Telegram orqali ulashish',
-    'shareTelegramText': 'Maydon.uz orqali ajoyib futbol maydoni:',
+    'shareTelegramText': 'Maydonuz orqali ajoyib futbol maydoni:',
     'copyAddress': 'Manzilni nusxalash',
     'copiedAddress': 'Manzil muvaffaqiyatli nusxalandi!',
     'selectSlotFirst': 'Iltimos, avval vaqtni tanlang!',
@@ -141,7 +141,7 @@ const translations: Record<Language, Record<string, string>> = {
     'navigation': 'Navigatsiya'
   },
   'ru': {
-    'appName': 'Maydon.uz',
+    'appName': 'Maydonuz',
     'search': 'Поиск полей...',
     'map': 'Карта',
     'list': 'Список',
@@ -245,7 +245,7 @@ const translations: Record<Language, Record<string, string>> = {
     'noFieldsYet': 'У вас пока нет добавленных полей.',
     'noIncomingBookings': 'Входящих броней пока нет.',
     'shareTelegram': 'Поделиться в Telegram',
-    'shareTelegramText': 'Отличное футбольное поле на Maydon.uz:',
+    'shareTelegramText': 'Отличное футбольное поле на Maydonuz:',
     'copyAddress': 'Скопировать адрес',
     'copiedAddress': 'Адрес успешно скопирован!',
     'selectSlotFirst': 'Пожалуйста, сначала выберите время!',

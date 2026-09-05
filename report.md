@@ -1,4 +1,4 @@
-# Maydon.uz loyihasi bo‘yicha hisobot
+# Maydonuz loyihasi bo‘yicha hisobot
 
 ## 1. Loyiha vazifasi
 
@@ -33,4 +33,4 @@ Loyiha hozircha **mock ma’lumotlar** bilan ishlaydi va prototiplash/demonstrat
 
 ## 4. Xulosa
 
-Maydon.uz — React + TypeScript asosida qurilgan, xarita va qidiruv funksiyalariga yo‘naltirilgan frontend loyiha bo‘lib, kelajakda real backend/booking tizimi bilan integratsiyaga tayyor prototip hisoblanadi.
+Maydonuz — React + TypeScript asosida qurilgan, xarita va qidiruv funksiyalariga yo‘naltirilgan frontend loyiha bo‘lib, kelajakda real backend/booking tizimi bilan integratsiyaga tayyor prototip hisoblanadi.
