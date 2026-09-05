@@ -4,8 +4,10 @@ import { FootballField } from '../../types';
 import { Booking } from '../../types/booking';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useApp } from '../../contexts/AppContext';
 import { useBooking } from '../../contexts/BookingContext';
 import { useToast } from '../../contexts/ToastContext';
+import { calculateDistance } from '../../utils/helpers';
 
 const AuthModal = React.lazy(() => import('./AuthModal'));
 
@@ -29,8 +31,14 @@ type StepMode = 'details' | 'checkout' | 'receipt';
 const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose }) => {
   const { translations } = useLanguage();
   const { isLoggedIn } = useAuth();
+  const { userLocation } = useApp();
   const { bookField, payBooking, getAvailableTimeSlots } = useBooking();
   const toast = useToast();
+
+  const [coord1, coord2] = field.coordinates;
+  const lat = coord1 < 50 ? coord1 : coord2;
+  const lng = coord1 > 50 ? coord1 : coord2;
+  const distance = userLocation ? calculateDistance(userLocation[0], userLocation[1], lat, lng) : null;
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -205,10 +213,17 @@ O'yinga birga boramizmi?`;
                     <div className="flex items-center text-gray-600">
                       <MapPin className="h-5 w-5 mr-2.5 text-green-600 flex-shrink-0" />
                       <div className="flex flex-col text-left">
-                        <span className="text-sm font-medium">{field.district}, {field.region}</span>
+                        <div className="flex items-center flex-wrap gap-2">
+                          <span className="text-sm font-medium">{field.district}, {field.region}</span>
+                          {distance !== null && (
+                            <span className="text-xs font-bold text-sky-700 bg-sky-50 border border-sky-200/70 px-2 py-0.5 rounded-full">
+                              📍 {translations.distanceFromYou || 'Sizdan'} {distance} km
+                            </span>
+                          )}
+                        </div>
                         {isLoggedIn && (
                           <a 
-                            href={`https://www.google.com/maps/dir/?api=1&destination=${field.coordinates[0]},${field.coordinates[1]}`}
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-brand-600 hover:text-brand-700 hover:underline font-bold mt-1 flex items-center"

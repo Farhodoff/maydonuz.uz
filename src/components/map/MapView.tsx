@@ -5,6 +5,7 @@ import { useApp } from '../../contexts/AppContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { FootballField } from '../../types';
+import { calculateDistance } from '../../utils/helpers';
 import { MapPin, Navigation, Compass } from 'lucide-react';
 
 interface MapViewProps {
@@ -14,12 +15,13 @@ interface MapViewProps {
 const TASHKENT_CENTER: [number, number] = [41.2995, 69.2401];
 
 const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
-  const { filteredFields } = useApp();
+  const { filteredFields, userLocation, requestUserLocation, isLocating } = useApp();
   const { translations } = useLanguage();
   const { isLoggedIn } = useAuth();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
+  const userMarkerLayerRef = useRef<L.LayerGroup | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [selectedFieldForModal, setSelectedFieldForModal] = useState<FootballField | null>(null);
 
@@ -40,7 +42,9 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
     }).addTo(map);
 
     const markersGroup = L.layerGroup().addTo(map);
+    const userMarkerGroup = L.layerGroup().addTo(map);
     markersLayerRef.current = markersGroup;
+    userMarkerLayerRef.current = userMarkerGroup;
     mapInstanceRef.current = map;
     setMapReady(true);
 
@@ -48,6 +52,7 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
       map.remove();
       mapInstanceRef.current = null;
       markersLayerRef.current = null;
+      userMarkerLayerRef.current = null;
     };
   }, []);
 
@@ -59,22 +64,47 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
   }, []);
 
   // Geolocation to user
-  const handleLocateMe = useCallback(() => {
-    if (!navigator.geolocation || !mapInstanceRef.current) return;
+  const handleLocateMe = useCallback(async () => {
+    if (userLocation && mapInstanceRef.current) {
+      mapInstanceRef.current.flyTo([userLocation[0], userLocation[1]], 14, { duration: 1.2 });
+      return;
+    }
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current.flyTo([latitude, longitude], 14, { duration: 1.2 });
-        }
-      },
-      (err) => {
-        console.warn('Geolocation denied or unavailable', err);
-        handleResetCenter();
-      }
-    );
-  }, [handleResetCenter]);
+    const coords = await requestUserLocation();
+    if (coords && mapInstanceRef.current) {
+      mapInstanceRef.current.flyTo([coords[0], coords[1]], 14, { duration: 1.2 });
+    } else {
+      handleResetCenter();
+    }
+  }, [userLocation, requestUserLocation, handleResetCenter]);
+
+  // Handle user location marker
+  useEffect(() => {
+    if (!mapReady || !userMarkerLayerRef.current || !mapInstanceRef.current) return;
+    userMarkerLayerRef.current.clearLayers();
+
+    if (userLocation) {
+      const userIcon = L.divIcon({
+        className: 'user-leaflet-marker',
+        html: `
+          <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;">
+            <div style="position: absolute; width: 32px; height: 32px; background: rgba(37, 99, 235, 0.3); border-radius: 9999px; animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+            <div style="width: 16px; height: 16px; background: #2563eb; border: 3px solid white; border-radius: 9999px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); position: relative; z-index: 2;"></div>
+          </div>
+        `,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+      });
+
+      const userMarker = L.marker([userLocation[0], userLocation[1]], { icon: userIcon });
+      userMarker.bindPopup(`
+        <div style="font-family: inherit; font-size: 12px; font-weight: 700; color: #1e293b; padding: 4px 6px; text-align: center;">
+          📍 ${translations.yourLocation || 'Sizning joylashuvingiz'}
+        </div>
+      `);
+      userMarkerLayerRef.current.addLayer(userMarker);
+    }
+  }, [userLocation, mapReady, translations]);
 
   // Handle markers update
   useEffect(() => {
@@ -113,6 +143,8 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
 
       const marker = L.marker([lat, lng], { icon: customIcon });
 
+      const dist = userLocation ? calculateDistance(userLocation[0], userLocation[1], lat, lng) : null;
+
       const popupHtml = `
         <div style="width: 220px; font-family: inherit;">
           <div style="height: 110px; width: 100%; border-radius: 12px; overflow: hidden; position: relative; margin-bottom: 8px;">
@@ -127,9 +159,15 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
           <h4 style="font-weight: 700; font-size: 14px; margin: 0 0 2px 0; color: #0f172a; line-height: 1.2;">
             ${field.name}
           </h4>
-          <p style="font-size: 12px; color: #64748b; margin: 0 0 6px 0;">
+          <p style="font-size: 12px; color: #64748b; margin: 0 0 4px 0;">
             ${field.district} • ${field.size}
           </p>
+          ${dist !== null ? `
+            <div style="display: inline-flex; align-items: center; gap: 4px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 6px; margin-bottom: 6px;">
+              <span>📍</span>
+              <span>${translations.distanceFromYou || 'Sizdan'} ${dist} km</span>
+            </div>
+          ` : ''}
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 6px;">
             <div>
               <span style="font-size: 13px; font-weight: 800; color: #059669;">
@@ -166,7 +204,7 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
         markersLayerRef.current.addLayer(marker);
       }
     });
-  }, [filteredFields, mapReady, onFieldClick, translations, isLoggedIn]);
+  }, [filteredFields, mapReady, onFieldClick, translations, isLoggedIn, userLocation]);
 
   return (
     <div className="relative rounded-3xl overflow-hidden border border-slate-200/80 shadow-soft bg-white">
@@ -181,10 +219,12 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
         </button>
         <button
           onClick={handleLocateMe}
-          title="Mening joylashuvim"
-          className="p-2.5 bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200/60 text-slate-700 hover:text-brand-600 hover:bg-white transition-all active:scale-95"
+          title={translations.myLocation || 'Mening joylashuvim'}
+          className={`p-2.5 bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200/60 text-slate-700 hover:text-brand-600 hover:bg-white transition-all active:scale-95 cursor-pointer ${
+            isLocating ? 'text-brand-600 ring-2 ring-brand-500 ring-offset-1' : ''
+          }`}
         >
-          <Navigation className="h-5 w-5" />
+          <Navigation className={`h-5 w-5 ${isLocating ? 'animate-spin text-brand-600' : ''}`} />
         </button>
       </div>
 

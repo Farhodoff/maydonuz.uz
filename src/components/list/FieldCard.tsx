@@ -5,6 +5,8 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useApp } from '../../contexts/AppContext';
 
+import { calculateDistance } from '../../utils/helpers';
+
 interface FieldCardProps {
   field: FootballField;
   onFieldClick: (field: FootballField) => void;
@@ -30,8 +32,12 @@ const getFieldIcon = (type: string) => {
 const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
   const { translations } = useLanguage();
   const { isLoggedIn } = useAuth();
-  const { openAuthModal } = useApp();
+  const { openAuthModal, userLocation } = useApp();
   const isAvailable = field.available ?? true;
+
+  const distance = userLocation
+    ? calculateDistance(userLocation[0], userLocation[1], field.coordinates[0], field.coordinates[1])
+    : null;
 
   return (
     <div 
@@ -60,9 +66,16 @@ const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
             />
           </div>
 
-          <div className="flex items-center text-xs text-slate-500 font-medium mt-1">
-            <MapPin className="h-3.5 w-3.5 mr-1 text-slate-400 flex-shrink-0" />
-            <span className="truncate">{field.district}, {field.region}</span>
+          <div className="flex items-center flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500 font-medium mt-1">
+            <div className="flex items-center truncate">
+              <MapPin className="h-3.5 w-3.5 mr-1 text-slate-400 flex-shrink-0" />
+              <span className="truncate">{field.district}, {field.region}</span>
+            </div>
+            {distance !== null && (
+              <span className="inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md flex-shrink-0">
+                📍 {translations.distanceFromYou || 'Sizdan'} {distance} {translations.kmAway || 'km'}
+              </span>
+            )}
           </div>
 
           {/* Badges */}

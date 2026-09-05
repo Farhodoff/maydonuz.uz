@@ -208,7 +208,15 @@ const translations: Record<Language, Record<string, string>> = {
     'hoursPerDay': 'soat / kun',
     'potentialMonthlyIncome': 'Oylik kutilayotgan daromad',
     'revenueFormulaNote': 'Hisob-kitob 30 kunlik to‘liq oylik o‘rtacha bandlik asosida hisoblandi',
-    'startEarningToday': 'Bugunoq daromadni boshlang'
+    'startEarningToday': 'Bugunoq daromadni boshlang',
+    'nearestToMe': 'Menga eng yaqin',
+    'sortByDistance': 'Masofa: eng yaqin',
+    'distanceFromYou': 'Sizdan',
+    'kmAway': 'km',
+    'locating': 'Joylashuv aniqlanmoqda...',
+    'locationFound': 'Joylashuvingiz aniqlandi!',
+    'locationPermissionDenied': 'Geolokatsiyaga ruxsat berilmadi',
+    'yourLocation': 'Sizning joylashuvingiz'
   },
   'ru': {
     'appName': 'Maydonuz',
@@ -400,7 +408,15 @@ const translations: Record<Language, Record<string, string>> = {
     'hoursPerDay': 'часов / день',
     'potentialMonthlyIncome': 'Ожидаемый доход в месяц',
     'revenueFormulaNote': 'Расчет основан на средней занятости за 30 дней',
-    'startEarningToday': 'Начните зарабатывать сегодня'
+    'startEarningToday': 'Начните зарабатывать сегодня',
+    'nearestToMe': 'Ближайшие',
+    'sortByDistance': 'Расстояние: ближайшие',
+    'distanceFromYou': 'От вас',
+    'kmAway': 'км',
+    'locating': 'Определение геопозиции...',
+    'locationFound': 'Ваша локация определена!',
+    'locationPermissionDenied': 'Доступ к геолокации не предоставлен',
+    'yourLocation': 'Ваша локация'
   },
   'en': {
     'appName': 'Maydonuz',
@@ -592,7 +608,15 @@ const translations: Record<Language, Record<string, string>> = {
     'hoursPerDay': 'hrs / day',
     'potentialMonthlyIncome': 'Estimated Monthly Revenue',
     'revenueFormulaNote': 'Calculated based on 30-day average monthly occupancy',
-    'startEarningToday': 'Start Earning Today'
+    'startEarningToday': 'Start Earning Today',
+    'nearestToMe': 'Nearest to Me',
+    'sortByDistance': 'Distance: Nearest',
+    'distanceFromYou': 'From you',
+    'kmAway': 'km',
+    'locating': 'Detecting location...',
+    'locationFound': 'Location detected!',
+    'locationPermissionDenied': 'Geolocation permission denied',
+    'yourLocation': 'Your Location'
   }
 };
 

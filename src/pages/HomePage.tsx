@@ -42,6 +42,9 @@ const HomePage: React.FC = () => {
     authModalMode,
     openAuthModal,
     closeAuthModal,
+    userLocation,
+    isLocating,
+    requestUserLocation,
   } = useApp();
   const { translations } = useLanguage();
   const { isLoggedIn } = useAuth();
@@ -62,6 +65,29 @@ const HomePage: React.FC = () => {
 
   const quickTags = [
     { label: translations.all || 'Barchasi', active: !searchFilters.district && !searchFilters.fieldType && !searchFilters.sortBy, action: () => setSearchFilters({ district: '', fieldType: '', query: '', sortBy: '' }) },
+    {
+      label: isLocating
+        ? (translations.locating || 'Aniqlanmoqda...')
+        : ('📍 ' + (translations.nearestToMe || 'Menga eng yaqin')),
+      active: searchFilters.sortBy === 'distance_asc',
+      action: async () => {
+        if (searchFilters.sortBy === 'distance_asc') {
+          setSearchFilters({ sortBy: '' });
+        } else {
+          if (!userLocation) {
+            const coords = await requestUserLocation();
+            if (coords) {
+              setSearchFilters({ sortBy: 'distance_asc' });
+              showToast(translations.locationFound || 'Joylashuvingiz aniqlandi!', 'success');
+            } else {
+              showToast(translations.locationPermissionDenied || 'Geolokatsiyaga ruxsat berilmadi', 'warning');
+            }
+          } else {
+            setSearchFilters({ sortBy: 'distance_asc' });
+          }
+        }
+      },
+    },
     { label: '⭐ 4.5+ ' + (translations.rating || 'Reyting'), active: searchFilters.sortBy === 'rating_desc', action: () => setSearchFilters({ sortBy: searchFilters.sortBy === 'rating_desc' ? '' : 'rating_desc' }) },
     { label: '💰 ' + (translations.priceAsc || 'Arzonroq'), active: searchFilters.sortBy === 'price_asc', action: () => setSearchFilters({ sortBy: searchFilters.sortBy === 'price_asc' ? '' : 'price_asc' }) },
     { label: '🌱 ' + (translations.artificial || 'Sun‘iy'), active: searchFilters.fieldType === 'artificial', action: () => setSearchFilters({ fieldType: searchFilters.fieldType === 'artificial' ? '' : 'artificial' }) },

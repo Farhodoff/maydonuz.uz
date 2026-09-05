@@ -3,10 +3,12 @@ import { ChevronDown, SlidersHorizontal, X, RotateCcw } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import { FilterOption } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useToast } from '../../contexts/ToastContext';
 
 const Filters: React.FC = () => {
-  const { searchFilters, setSearchFilters } = useApp();
+  const { searchFilters, setSearchFilters, userLocation, requestUserLocation, isLocating } = useApp();
   const { translations } = useLanguage();
+  const { showToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
   const regions: FilterOption[] = [
@@ -37,12 +39,28 @@ const Filters: React.FC = () => {
   ];
 
   const sortOptions: FilterOption[] = [
+    {
+      value: 'distance_asc',
+      label: isLocating
+        ? (translations.locating || 'Aniqlanmoqda...')
+        : (translations.sortByDistance || 'Masofa: eng yaqin'),
+    },
     { value: 'rating_desc', label: translations.ratingDesc },
     { value: 'price_asc', label: translations.priceAsc },
     { value: 'price_desc', label: translations.priceDesc },
   ];
 
-  const handleFilterChange = (key: string, value: string) => {
+  const handleFilterChange = async (key: string, value: string) => {
+    if (key === 'sortBy' && value === 'distance_asc' && !userLocation) {
+      const coords = await requestUserLocation();
+      if (coords) {
+        showToast(translations.locationFound || 'Joylashuvingiz aniqlandi!', 'success');
+        setSearchFilters({ ...searchFilters, sortBy: 'distance_asc' });
+      } else {
+        showToast(translations.locationPermissionDenied || 'Geolokatsiyaga ruxsat berilmadi', 'warning');
+      }
+      return;
+    }
     setSearchFilters({ ...searchFilters, [key]: value });
   };
 
