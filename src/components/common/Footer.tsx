@@ -61,16 +61,16 @@ const Footer: React.FC = () => {
                 <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.home}</a>
               </li>
               <li>
-                <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.about}</a>
+                <a href="#how-it-works" className="text-slate-300 hover:text-white transition-colors">{translations.about}</a>
               </li>
               <li>
                 <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.fields}</a>
               </li>
               <li>
-                <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.guide}</a>
+                <a href="#how-it-works" className="text-slate-300 hover:text-white transition-colors">{translations.guide}</a>
               </li>
               <li>
-                <a href="#" className="text-slate-300 hover:text-white transition-colors">{translations.contact}</a>
+                <a href="#for-owners" className="text-slate-300 hover:text-white transition-colors">Maydon egalari</a>
               </li>
             </ul>
           </div>

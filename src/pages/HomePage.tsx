@@ -4,6 +4,7 @@ import SearchBar from '../components/search/SearchBar';
 import Filters from '../components/search/Filters';
 import ViewToggle from '../components/common/ViewToggle';
 import ListView from '../components/list/ListView';
+import HowItWorks from '../components/common/HowItWorks';
 import Footer from '../components/common/Footer';
 import MobileBottomNav from '../components/common/MobileBottomNav';
 import { useApp } from '../contexts/AppContext';
@@ -15,6 +16,7 @@ const MapView = React.lazy(() => import('../components/map/MapView'));
 const FieldDetailsModal = React.lazy(() => import('../components/modals/FieldDetailsModal'));
 const AuthModal = React.lazy(() => import('../components/modals/AuthModal'));
 const MyBookingsModal = React.lazy(() => import('../components/modals/MyBookingsModal'));
+const OwnerDashboardModal = React.lazy(() => import('../components/modals/OwnerDashboardModal'));
 
 const MapSkeleton = () => (
   <div className="h-[460px] sm:h-[540px] md:h-[620px] rounded-3xl bg-slate-100 border border-slate-200 flex flex-col items-center justify-center animate-pulse">
@@ -30,6 +32,7 @@ const HomePage: React.FC = () => {
   const [selectedField, setSelectedField] = useState<FootballField | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isBookingsModalOpen, setIsBookingsModalOpen] = useState(false);
+  const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
 
   const quickTags = [
     { label: translations.all || 'Barchasi', active: !searchFilters.district && !searchFilters.fieldType && !searchFilters.sortBy, action: () => setSearchFilters({ district: '', fieldType: '', query: '', sortBy: '' }) },
@@ -105,6 +108,9 @@ const HomePage: React.FC = () => {
               <ListView />
             )}
           </div>
+
+          {/* Landing Elements: How It Works & Field Owner CTA */}
+          <HowItWorks onOpenOwnerModal={() => setIsOwnerModalOpen(true)} />
         </div>
       </main>
 
@@ -139,6 +145,14 @@ const HomePage: React.FC = () => {
           <MyBookingsModal
             isOpen={isBookingsModalOpen}
             onClose={() => setIsBookingsModalOpen(false)}
+          />
+        )}
+
+        {/* Owner Dashboard Modal triggered from landing CTA */}
+        {isOwnerModalOpen && (
+          <OwnerDashboardModal
+            isOpen={isOwnerModalOpen}
+            onClose={() => setIsOwnerModalOpen(false)}
           />
         )}
       </Suspense>

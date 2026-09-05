@@ -138,7 +138,18 @@ const translations: Record<Language, Record<string, string>> = {
     'details': 'Batafsil / Bron qilish',
     'myBookings': 'Bronlarim',
     'profile': 'Profil',
-    'navigation': 'Navigatsiya'
+    'navigation': 'Navigatsiya',
+    'howItWorksTitle': 'Maydonuz qanday ishlaydi?',
+    'howItWorksSubtitle': '3 ta oddiy qadamda futbol maydonini toping va band qiling',
+    'step1Title': '1. Maydonni tanlang',
+    'step1Desc': 'Toshkentdagi qulay tuman, narx va o‘lcham bo‘yicha eng mos maydonni toping.',
+    'step2Title': '2. Vaqtni belgilang',
+    'step2Desc': 'Bo‘sh soatlarni onlayn tekshirib, telefon qilmasdan 1 daqiqada band qiling.',
+    'step3Title': '3. Futbol o‘ynang!',
+    'step3Desc': 'To‘lovni qulay usulda amalga oshiring, do‘stlarga ulashing va o‘yinga boring!',
+    'ownerCtaTitle': 'Futbol maydoningiz bormi?',
+    'ownerCtaDesc': 'Maydoningizni Maydonuz platformasiga bepul qo‘shing. Bo‘sh vaqtlarni to‘ldiring va daromadingizni oshiring.',
+    'ownerCtaBtn': 'Maydon qo‘shish'
   },
   'ru': {
     'appName': 'Maydonuz',
@@ -260,7 +271,18 @@ const translations: Record<Language, Record<string, string>> = {
     'details': 'Подробнее / Бронь',
     'myBookings': 'Брони',
     'profile': 'Профиль',
-    'navigation': 'Навигация'
+    'navigation': 'Навигация',
+    'howItWorksTitle': 'Как работает Maydonuz?',
+    'howItWorksSubtitle': 'Найдите и забронируйте футбольное поле за 3 простых шага',
+    'step1Title': '1. Выберите поле',
+    'step1Desc': 'Найдите подходящее поле по району, цене и размеру в Ташкенте.',
+    'step2Title': '2. Выберите время',
+    'step2Desc': 'Проверьте свободные часы онлайн и забронируйте за 1 минуту без звонков.',
+    'step3Title': '3. Играйте в футбол!',
+    'step3Desc': 'Оплатите удобным способом, поделитесь с друзьями и вперед на игру!',
+    'ownerCtaTitle': 'У вас есть футбольное поле?',
+    'ownerCtaDesc': 'Добавьте свое поле на платформу Maydonuz бесплатно. Заполняйте свободные часы и увеличивайте доход.',
+    'ownerCtaBtn': 'Добавить поле'
   }
 };
 
