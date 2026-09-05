@@ -9,6 +9,8 @@ import Footer from '../components/common/Footer';
 import MobileBottomNav from '../components/common/MobileBottomNav';
 import { useApp } from '../contexts/AppContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { FootballField } from '../types';
 
 // Code-split heavy components
@@ -28,11 +30,22 @@ const MapSkeleton = () => (
 const HomePage: React.FC = () => {
   const { viewMode, filteredFields, searchFilters, setSearchFilters } = useApp();
   const { translations } = useLanguage();
+  const { isLoggedIn } = useAuth();
+  const { showToast } = useToast();
 
   const [selectedField, setSelectedField] = useState<FootballField | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isBookingsModalOpen, setIsBookingsModalOpen] = useState(false);
   const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
+
+  const handleOpenOwnerModal = () => {
+    if (!isLoggedIn) {
+      showToast("Maydoningizni qo‘shish uchun avval tizimga kiring yoki ro‘yxatdan o‘ting", "info");
+      setIsAuthModalOpen(true);
+      return;
+    }
+    setIsOwnerModalOpen(true);
+  };
 
   const quickTags = [
     { label: translations.all || 'Barchasi', active: !searchFilters.district && !searchFilters.fieldType && !searchFilters.sortBy, action: () => setSearchFilters({ district: '', fieldType: '', query: '', sortBy: '' }) },
@@ -110,7 +123,7 @@ const HomePage: React.FC = () => {
           </div>
 
           {/* Landing Elements: How It Works & Field Owner CTA */}
-          <HowItWorks onOpenOwnerModal={() => setIsOwnerModalOpen(true)} />
+          <HowItWorks onOpenOwnerModal={handleOpenOwnerModal} />
         </div>
       </main>
 

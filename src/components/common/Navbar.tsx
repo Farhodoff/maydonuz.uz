@@ -50,8 +50,29 @@ const Navbar: React.FC = () => {
       <nav className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex-shrink-0 flex items-center">
-              <h1 className="text-xl font-extrabold text-brand-600 tracking-tight">{translations.appName}</h1>
+            <div className="flex items-center space-x-8">
+              <a href="#" className="flex-shrink-0 flex items-center">
+                <h1 className="text-xl font-black text-brand-600 tracking-tight">{translations.appName}</h1>
+              </a>
+
+              {/* Desktop links */}
+              <div className="hidden md:flex items-center space-x-6">
+                <a
+                  href="#how-it-works"
+                  className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition-colors"
+                >
+                  {translations.howItWorksTitle || 'Qanday ishlaydi?'}
+                </a>
+                <a
+                  href="#for-owners"
+                  className="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition-colors flex items-center space-x-1.5"
+                >
+                  <span>Maydon egalari</span>
+                  <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">
+                    Biznes
+                  </span>
+                </a>
+              </div>
             </div>
 
             {/* Desktop navigation */}
@@ -201,6 +222,27 @@ const Navbar: React.FC = () => {
                 >
                   🇷🇺 RU
                 </button>
+              </div>
+
+              {/* Mobile Quick Page Links */}
+              <div className="px-3 py-2 space-y-1 border-b border-slate-100">
+                <a
+                  href="#how-it-works"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-2 text-sm font-bold text-slate-700 hover:text-emerald-600"
+                >
+                  {translations.howItWorksTitle || 'Qanday ishlaydi?'}
+                </a>
+                <a
+                  href="#for-owners"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between py-2 text-sm font-bold text-slate-700 hover:text-emerald-600"
+                >
+                  <span>Futbol maydoningiz bormi?</span>
+                  <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-black uppercase">
+                    Biznes
+                  </span>
+                </a>
               </div>
 
               {/* Mobile Auth options */}
