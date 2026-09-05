@@ -3,6 +3,8 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { BookingProvider } from './contexts/BookingContext';
 import { AppProvider } from './contexts/AppContext';
+import { ToastProvider } from './contexts/ToastContext';
+import ToastContainer from './components/common/ToastContainer';
 import HomePage from './pages/HomePage';
 
 function App() {
@@ -11,7 +13,10 @@ function App() {
       <AuthProvider>
         <BookingProvider>
           <AppProvider>
-            <HomePage />
+            <ToastProvider>
+              <HomePage />
+              <ToastContainer />
+            </ToastProvider>
           </AppProvider>
         </BookingProvider>
       </AuthProvider>

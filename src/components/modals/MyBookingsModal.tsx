@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { X, Calendar, Clock, DollarSign, CheckCircle, AlertCircle, Trash2, CreditCard, ShieldCheck } from 'lucide-react';
+import { X, Calendar, Clock, DollarSign, CheckCircle, Trash2, CreditCard, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBooking } from '../../contexts/BookingContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useToast } from '../../contexts/ToastContext';
 import { Booking } from '../../types/booking';
 
 interface MyBookingsModalProps {
@@ -14,6 +15,7 @@ const MyBookingsModal: React.FC<MyBookingsModalProps> = ({ isOpen, onClose }) =>
   const { translations } = useLanguage();
   const { user } = useAuth();
   const { payBooking, cancelBooking, getUserBookings } = useBooking();
+  const toast = useToast();
   
   const [selectedBookingForPayment, setSelectedBookingForPayment] = useState<Booking | null>(null);
   const [selectedReceipt, setSelectedReceipt] = useState<Booking | null>(null);
@@ -24,7 +26,10 @@ const MyBookingsModal: React.FC<MyBookingsModalProps> = ({ isOpen, onClose }) =>
 
   const handleCancel = async (id: string) => {
     if (window.confirm('Haqiqatdan ham ushbu bron qilishni bekor qilmoqchimisiz?')) {
-      await cancelBooking(id);
+      const res = await cancelBooking(id);
+      if (res.success) {
+        toast.info(res.message);
+      }
     }
   };
 
@@ -32,8 +37,9 @@ const MyBookingsModal: React.FC<MyBookingsModalProps> = ({ isOpen, onClose }) =>
     const res = await payBooking(bookingId, method);
     if (res.success) {
       setSelectedBookingForPayment(null);
+      toast.success(translations.paymentSuccess || res.message);
     } else {
-      alert(res.message);
+      toast.error(res.message);
     }
   };
 

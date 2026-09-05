@@ -13,9 +13,8 @@ const ViewToggle: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center my-6">
-      <div className="inline-flex rounded-2xl shadow-soft bg-white p-1.5 border border-slate-200">
-        <button
+    <div className="inline-flex rounded-2xl shadow-soft bg-white p-1 border border-slate-200">
+      <button
           type="button"
           onClick={() => handleViewChange('map')}
           className={`inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-xl transition-colors duration-200 ${
@@ -40,7 +39,6 @@ const ViewToggle: React.FC = () => {
           {translations.list}
         </button>
       </div>
-    </div>
   );
 };
 

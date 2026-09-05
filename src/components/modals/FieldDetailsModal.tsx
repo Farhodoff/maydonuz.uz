@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight, MapPin, Phone, User, Lock, CheckCircle, Navigation } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, MapPin, Phone, User, Lock, CheckCircle, Navigation, Share2, Copy, Check } from 'lucide-react';
 import { FootballField } from '../../types';
 import { Booking } from '../../types/booking';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useBooking } from '../../contexts/BookingContext';
-import AuthModal from './AuthModal';
+import { useToast } from '../../contexts/ToastContext';
+
+const AuthModal = React.lazy(() => import('./AuthModal'));
 
 const ALL_TIME_SLOTS = [
   '16:00 - 17:00',
@@ -28,9 +30,11 @@ const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose })
   const { translations } = useLanguage();
   const { isLoggedIn } = useAuth();
   const { bookField, payBooking, getAvailableTimeSlots } = useBooking();
+  const toast = useToast();
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   
   // Booking states
   const [step, setStep] = useState<StepMode>('details');
@@ -57,8 +61,33 @@ const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose })
     );
   };
 
+  const handleCopyAddress = async () => {
+    try {
+      const fullAddress = `${field.name}, ${field.district}, ${field.region}, ${field.address}`;
+      await navigator.clipboard.writeText(fullAddress);
+      setIsCopied(true);
+      toast.success(translations.copiedAddress || 'Manzil nusxalandi!');
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch {
+      toast.info('Manzil: ' + field.address);
+    }
+  };
+
+  const handleShareTelegram = () => {
+    const text = `⚽ ${field.name}
+📍 ${field.district}, ${field.region} (${field.address})
+💰 Narx: ${field.price.toLocaleString()} UZS / soat
+⭐️ Reyting: ${field.rating.toFixed(1)}
+O'yinga birga boramizmi?`;
+    const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(text)}`;
+    window.open(shareUrl, '_blank');
+  };
+
   const handleBookingInit = async () => {
-    if (!selectedTimeSlot) return;
+    if (!selectedTimeSlot) {
+      toast.warning(translations.selectSlotFirst || 'Iltimos, avval vaqtni tanlang!');
+      return;
+    }
 
     const res = await bookField(
       field.id,
@@ -72,8 +101,9 @@ const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose })
     if (res.success) {
       setCurrentBooking(res.booking);
       setStep('checkout');
+      toast.success(res.message);
     } else {
-      alert(res.message);
+      toast.error(res.message);
     }
   };
 
@@ -90,8 +120,9 @@ const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose })
         transactionId: `tx-${Math.floor(10000000 + Math.random() * 90000000)}`
       });
       setStep('receipt');
+      toast.success(translations.paymentSuccess || res.message);
     } else {
-      alert(res.message);
+      toast.error(res.message);
     }
   };
 
@@ -146,7 +177,27 @@ const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose })
             <div className="bg-white px-6 py-6 sm:p-8">
               <div className="sm:flex sm:items-start">
                 <div className="text-center sm:text-left w-full">
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">{field.name}</h3>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <h3 className="text-2xl font-bold text-slate-900">{field.name}</h3>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={handleCopyAddress}
+                        className="inline-flex items-center px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                        title={translations.copyAddress || 'Manzilni nusxalash'}
+                      >
+                        {isCopied ? <Check className="h-3.5 w-3.5 mr-1 text-emerald-600" /> : <Copy className="h-3.5 w-3.5 mr-1 text-slate-500" />}
+                        <span>{isCopied ? (translations.copiedSuccess || 'Nusxalandi') : (translations.copyAddress || 'Manzil')}</span>
+                      </button>
+                      <button
+                        onClick={handleShareTelegram}
+                        className="inline-flex items-center px-3 py-1.5 rounded-xl bg-[#229ED9]/10 text-[#229ED9] hover:bg-[#229ED9]/20 border border-[#229ED9]/30 text-xs font-semibold transition-colors"
+                        title={translations.shareTelegram || 'Telegramda ulashish'}
+                      >
+                        <Share2 className="h-3.5 w-3.5 mr-1" />
+                        <span>Telegram</span>
+                      </button>
+                    </div>
+                  </div>
                   
                   {/* Info Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -414,11 +465,15 @@ const FieldDetailsModal: React.FC<FieldDetailsModalProps> = ({ field, onClose })
         </div>
       </div>
 
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-        initialMode="login"
-      />
+      <React.Suspense fallback={null}>
+        {isAuthModalOpen && (
+          <AuthModal 
+            isOpen={isAuthModalOpen} 
+            onClose={() => setIsAuthModalOpen(false)} 
+            initialMode="login"
+          />
+        )}
+      </React.Suspense>
     </>
   );
 };

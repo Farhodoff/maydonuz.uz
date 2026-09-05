@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { X, Plus, Calendar, Clock, DollarSign, Phone, MapPin, Layers, Award, Image as ImageIcon, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
+import { X, Plus, Calendar, Clock, DollarSign, MapPin, Award, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useApp } from '../../contexts/AppContext';
 import { useBooking } from '../../contexts/BookingContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useToast } from '../../contexts/ToastContext';
 import { FootballField } from '../../types';
 
 interface OwnerDashboardModalProps {
@@ -22,6 +23,7 @@ const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({ isOpen, onClo
   const { user } = useAuth();
   const { fields, addField } = useApp();
   const { bookings, cancelBooking } = useBooking();
+  const toast = useToast();
 
   const [activeTab, setActiveTab] = useState<'fields' | 'bookings'>('fields');
   const [showAddForm, setShowAddForm] = useState(false);
@@ -56,7 +58,7 @@ const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({ isOpen, onClo
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        alert("Rasm hajmi juda katta (maksimal 2MB)");
+        toast.error(translations.imageTooLarge || "Rasm hajmi juda katta (maksimal 2MB)");
         return;
       }
       const reader = new FileReader();
@@ -70,7 +72,7 @@ const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({ isOpen, onClo
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !address || !phone) {
-      alert('Iltimos, barcha zaruriy maydonlarni to‘ldiring.');
+      toast.warning(translations.fillRequiredFields || 'Iltimos, barcha zaruriy maydonlarni to‘ldiring.');
       return;
     }
 
@@ -107,7 +109,7 @@ const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({ isOpen, onClo
     };
 
     addField(newField);
-    alert(translations.fieldAddedSuccess);
+    toast.success(translations.fieldAddedSuccess);
 
     // Reset Form
     setName('');
@@ -282,7 +284,7 @@ const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({ isOpen, onClo
                 </label>
                 <select
                   value={fieldType}
-                  onChange={(e) => setFieldType(e.target.value as any)}
+                  onChange={(e) => setFieldType(e.target.value as FootballField['fieldType'])}
                   className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-white"
                 >
                   <option value="artificial">Sun'iy (Artificial)</option>

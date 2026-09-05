@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Globe, Menu, X, LogOut, Key, User, ChevronDown, Calendar, Award } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Language } from '../../types';
-import AuthModal, { AuthModalMode } from '../modals/AuthModal';
-import MyBookingsModal from '../modals/MyBookingsModal';
-import OwnerDashboardModal from '../modals/OwnerDashboardModal';
+import type { AuthModalMode } from '../modals/AuthModal';
+
+const AuthModal = React.lazy(() => import('../modals/AuthModal'));
+const MyBookingsModal = React.lazy(() => import('../modals/MyBookingsModal'));
+const OwnerDashboardModal = React.lazy(() => import('../modals/OwnerDashboardModal'));
 
 const Navbar: React.FC = () => {
   const { language, setLanguage, translations } = useLanguage();
@@ -265,21 +267,29 @@ const Navbar: React.FC = () => {
         )}
       </nav>
 
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        initialMode={authModalMode}
-      />
+      <Suspense fallback={null}>
+        {isAuthModalOpen && (
+          <AuthModal
+            isOpen={isAuthModalOpen}
+            onClose={() => setIsAuthModalOpen(false)}
+            initialMode={authModalMode}
+          />
+        )}
 
-      <MyBookingsModal
-        isOpen={isMyBookingsModalOpen}
-        onClose={() => setIsMyBookingsModalOpen(false)}
-      />
+        {isMyBookingsModalOpen && (
+          <MyBookingsModal
+            isOpen={isMyBookingsModalOpen}
+            onClose={() => setIsMyBookingsModalOpen(false)}
+          />
+        )}
 
-      <OwnerDashboardModal
-        isOpen={isOwnerDashboardModalOpen}
-        onClose={() => setIsOwnerDashboardModalOpen(false)}
-      />
+        {isOwnerDashboardModalOpen && (
+          <OwnerDashboardModal
+            isOpen={isOwnerDashboardModalOpen}
+            onClose={() => setIsOwnerDashboardModalOpen(false)}
+          />
+        )}
+      </Suspense>
     </>
   );
 };

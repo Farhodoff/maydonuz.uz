@@ -121,7 +121,24 @@ const translations: Record<Language, Record<string, string>> = {
     'saveField': 'Maydonni saqlash',
     'fieldAddedSuccess': 'Yangi maydon muvaffaqiyatli qo\'shildi!',
     'noFieldsYet': 'Sizda hali qo\'shilgan maydonlar yo\'q.',
-    'noIncomingBookings': 'Kelgan buyurtmalar mavjud emas.'
+    'noIncomingBookings': 'Kelgan buyurtmalar mavjud emas.',
+    'shareTelegram': 'Telegram orqali ulashish',
+    'shareTelegramText': 'Maydon.uz orqali ajoyib futbol maydoni:',
+    'copyAddress': 'Manzilni nusxalash',
+    'copiedAddress': 'Manzil muvaffaqiyatli nusxalandi!',
+    'selectSlotFirst': 'Iltimos, avval vaqtni tanlang!',
+    'fillRequiredFields': 'Iltimos, barcha zaruriy maydonlarni to‘ldiring.',
+    'imageTooLarge': 'Rasm hajmi juda katta (maksimal 2MB)',
+    'quickTags': 'Tezkor tanlov',
+    'all': 'Barchasi',
+    'topRated': '⭐ 4.5+ Reyting',
+    'artificialGrass': 'Sun\'iy maysa',
+    'affordable': 'Arzonroq',
+    'openInMap': 'Xaritada ochish',
+    'details': 'Batafsil / Bron qilish',
+    'myBookings': 'Bronlarim',
+    'profile': 'Profil',
+    'navigation': 'Navigatsiya'
   },
   'ru': {
     'appName': 'Maydon.uz',
@@ -226,7 +243,24 @@ const translations: Record<Language, Record<string, string>> = {
     'saveField': 'Сохранить поле',
     'fieldAddedSuccess': 'Новое поле успешно добавлено!',
     'noFieldsYet': 'У вас пока нет добавленных полей.',
-    'noIncomingBookings': 'Входящих броней пока нет.'
+    'noIncomingBookings': 'Входящих броней пока нет.',
+    'shareTelegram': 'Поделиться в Telegram',
+    'shareTelegramText': 'Отличное футбольное поле на Maydon.uz:',
+    'copyAddress': 'Скопировать адрес',
+    'copiedAddress': 'Адрес успешно скопирован!',
+    'selectSlotFirst': 'Пожалуйста, сначала выберите время!',
+    'fillRequiredFields': 'Пожалуйста, заполните все обязательные поля.',
+    'imageTooLarge': 'Размер изображения слишком большой (макс. 2МБ)',
+    'quickTags': 'Быстрый выбор',
+    'all': 'Все',
+    'topRated': '⭐ Рейтинг 4.5+',
+    'artificialGrass': 'Искусственный газон',
+    'affordable': 'Доступные',
+    'openInMap': 'Открыть на карте',
+    'details': 'Подробнее / Бронь',
+    'myBookings': 'Брони',
+    'profile': 'Профиль',
+    'navigation': 'Навигация'
   }
 };
 
