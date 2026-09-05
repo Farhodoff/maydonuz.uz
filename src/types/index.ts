@@ -32,7 +32,11 @@ export interface SearchFilters {
 
 export type ViewMode = 'map' | 'list';
 
-export type Language = 'uz' | 'ru';
+export type AppTab = 'fields' | 'how-it-works' | 'for-owners';
+
+export type AuthModalMode = 'login' | 'register' | 'profile' | 'password';
+
+export type Language = 'uz' | 'ru' | 'en';
 
 export interface UserCredentials {
   verificationCode: string;

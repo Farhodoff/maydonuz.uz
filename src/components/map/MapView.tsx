@@ -3,6 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useApp } from '../../contexts/AppContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { FootballField } from '../../types';
 import { MapPin, Navigation, Compass } from 'lucide-react';
 
@@ -15,6 +16,7 @@ const TASHKENT_CENTER: [number, number] = [41.2995, 69.2401];
 const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
   const { filteredFields } = useApp();
   const { translations } = useLanguage();
+  const { isLoggedIn } = useAuth();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
@@ -116,7 +118,7 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
           <div style="height: 110px; width: 100%; border-radius: 12px; overflow: hidden; position: relative; margin-bottom: 8px;">
             <img src="${thumbnail}" alt="${field.name}" style="width: 100%; height: 100%; object-fit: cover;" />
             <div style="position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,0.65); color: white; padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: 600;">
-              ${field.fieldType}
+              ${translations[field.fieldType] || field.fieldType}
             </div>
             <div style="position: absolute; top: 6px; right: 6px; background: rgba(255,255,255,0.95); color: #0f172a; padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: 700;">
               ★ ${field.rating.toFixed(1)}
@@ -133,13 +135,13 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
               <span style="font-size: 13px; font-weight: 800; color: #059669;">
                 ${field.price.toLocaleString()} UZS
               </span>
-              <span style="font-size: 10px; color: #94a3b8; display: block;">/ soat</span>
+              <span style="font-size: 10px; color: #94a3b8; display: block;">${translations.perHourShort || '/ soat'}</span>
             </div>
             <button
               id="map-btn-${field.id}"
               style="background: #10b981; color: white; border: none; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);"
             >
-              ${translations.details || 'Batafsil'}
+              ${isLoggedIn ? (translations.book || 'Band qilish') : (translations.register || 'Ro‘yxatdan o‘tish')}
             </button>
           </div>
         </div>
@@ -164,7 +166,7 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
         markersLayerRef.current.addLayer(marker);
       }
     });
-  }, [filteredFields, mapReady, onFieldClick, translations]);
+  }, [filteredFields, mapReady, onFieldClick, translations, isLoggedIn]);
 
   return (
     <div className="relative rounded-3xl overflow-hidden border border-slate-200/80 shadow-soft bg-white">
@@ -172,8 +174,8 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
       <div className="absolute top-4 right-4 z-[400] flex flex-col space-y-2">
         <button
           onClick={handleResetCenter}
-          title="Toshkent markaziga qaytish"
-          className="p-2.5 bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200/60 text-slate-700 hover:text-brand-600 hover:bg-white transition-all active:scale-95"
+          title={translations.resetMapCenter || 'Toshkent markaziga qaytish'}
+          className="p-2.5 bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200/60 text-slate-700 hover:text-brand-600 hover:bg-white transition-all active:scale-95 cursor-pointer"
         >
           <Compass className="h-5 w-5" />
         </button>

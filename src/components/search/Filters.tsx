@@ -107,7 +107,7 @@ const Filters: React.FC = () => {
           }`}
         >
           <SlidersHorizontal className="h-3.5 w-3.5 text-brand-600" />
-          <span>Batafsil filtrlar</span>
+          <span>{translations.detailedFilters || 'Batafsil filtrlar'}</span>
           {activeCount > 0 && (
             <span className="ml-1 bg-brand-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-extrabold">
               {activeCount}
@@ -122,7 +122,7 @@ const Filters: React.FC = () => {
             className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-rose-600 font-semibold transition-colors"
           >
             <RotateCcw className="h-3 w-3" />
-            <span>Filtrlarni tozalash</span>
+            <span>{translations.clearFilters || 'Filtrlarni tozalash'}</span>
           </button>
         )}
       </div>
@@ -131,7 +131,7 @@ const Filters: React.FC = () => {
       {isOpen && (
         <div className="mt-3 p-4 bg-slate-50/90 rounded-2xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200/60">
-            <span className="text-xs font-bold text-slate-700">Qidiruv filtrlari</span>
+            <span className="text-xs font-bold text-slate-700">{translations.searchFiltersTitle || 'Qidiruv filtrlari'}</span>
             <button
               onClick={() => setIsOpen(false)}
               className="text-slate-400 hover:text-slate-700 p-1 rounded-lg"

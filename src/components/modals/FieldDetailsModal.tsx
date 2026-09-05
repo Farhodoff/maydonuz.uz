@@ -214,7 +214,7 @@ O'yinga birga boramizmi?`;
                             className="text-xs text-brand-600 hover:text-brand-700 hover:underline font-bold mt-1 flex items-center"
                           >
                             <Navigation className="h-3.5 w-3.5 mr-1" />
-                            Google Xaritada navigatsiya
+                            {translations.googleMapsNav || 'Google Xaritada navigatsiya'}
                           </a>
                         )}
                       </div>
@@ -233,17 +233,22 @@ O'yinga birga boramizmi?`;
                         </a>
                       </div>
                     ) : (
-                      <div className="flex items-center text-gray-600 bg-slate-50 border border-slate-200/60 rounded-2xl p-3 sm:col-span-2">
-                        <Lock className="h-5 w-5 mr-3 text-slate-400 flex-shrink-0" />
-                        <div className="text-left">
-                          <p className="text-xs text-slate-500 font-medium">{translations.loginToViewPhone}</p>
-                          <button 
-                            onClick={() => setIsAuthModalOpen(true)}
-                            className="text-xs font-bold text-brand-600 hover:text-brand-700 hover:underline mt-0.5"
-                          >
-                            {translations.login} / {translations.register}
-                          </button>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-gray-600 bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 sm:col-span-2 gap-2.5 shadow-xs">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 rounded-xl bg-slate-200/80 flex items-center justify-center text-slate-600 flex-shrink-0">
+                            <Lock className="h-4 w-4" />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-xs text-slate-800 font-extrabold">{translations.phoneLockNotice || 'Telefon raqamini ko‘rish uchun ro‘yxatdan o‘ting'}</p>
+                            <p className="text-[11px] text-slate-400">{translations.phoneDirectContact || 'Maydon egasi bilan to‘g‘ridan-to‘g‘ri bog‘lanish imkoniyati'}</p>
+                          </div>
                         </div>
+                        <button 
+                          onClick={() => setIsAuthModalOpen(true)}
+                          className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs transition-all shadow-xs flex-shrink-0 cursor-pointer text-center"
+                        >
+                          {translations.register || 'Ro‘yxatdan o‘tish'}
+                        </button>
                       </div>
                     )}
 
@@ -325,15 +330,27 @@ O'yinga birga boramizmi?`;
                               {translations.book}
                             </button>
                           ) : (
-                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
-                              <p className="text-sm text-slate-600 font-medium mb-3">Maydonni band qilish uchun tizimga kiring</p>
-                              <button
-                                type="button"
-                                onClick={() => setIsAuthModalOpen(true)}
-                                className="px-6 py-2 rounded-full bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm transition-all"
-                              >
-                                {translations.login}
-                              </button>
+                            <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-slate-50 border border-emerald-200/80 text-center space-y-2.5 shadow-xs">
+                              <div>
+                                <h5 className="text-sm font-black text-slate-900">{translations.registerToBookPrompt || 'Maydonni band qilish uchun ro‘yxatdan o‘ting'}</h5>
+                                <p className="text-xs text-slate-600 mt-0.5">{translations.registerToBookSub || 'Online band qilish va SMS kvitansiya olish uchun tizimga kiring'}</p>
+                              </div>
+                              <div className="flex items-center justify-center space-x-2 pt-1">
+                                <button
+                                  type="button"
+                                  onClick={() => setIsAuthModalOpen(true)}
+                                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs transition-all shadow-xs cursor-pointer"
+                                >
+                                  {translations.register || 'Ro‘yxatdan o‘tish'}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setIsAuthModalOpen(true)}
+                                  className="px-4 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-all cursor-pointer"
+                                >
+                                  {translations.login || 'Kirish'}
+                                </button>
+                              </div>
                             </div>
                           )}
                         </div>
@@ -346,15 +363,15 @@ O'yinga birga boramizmi?`;
                           <h5 className="font-bold text-slate-800 text-sm">{translations.bookingDetails}</h5>
                           <div className="text-xs text-slate-650 space-y-1">
                             <div className="flex justify-between">
-                              <span>Maydon:</span>
+                              <span>{translations.fields}:</span>
                               <span className="font-bold text-slate-900">{field.name}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span>Kun:</span>
+                              <span>{translations.selectDate}:</span>
                               <span className="font-bold text-slate-900">{selectedDate}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span>Vaqt:</span>
+                              <span>{translations.selectTime}:</span>
                               <span className="font-bold text-slate-900">{selectedTimeSlot}</span>
                             </div>
                             <div className="flex justify-between border-t border-slate-200 pt-2.5 mt-2.5 text-sm">
@@ -387,7 +404,7 @@ O'yinga birga boramizmi?`;
                               onClick={() => handlePaymentSubmit('cash')}
                               className="p-3.5 border border-slate-200 rounded-xl hover:border-brand-500 hover:bg-slate-50 transition-all font-bold text-slate-800 flex flex-col items-center justify-center space-y-1 active:scale-[0.98]"
                             >
-                              <span className="text-slate-600 text-xs font-extrabold tracking-wide">Naqd</span>
+                              <span className="text-slate-600 text-xs font-extrabold tracking-wide">{translations.cashPayment || 'Naqd'}</span>
                             </button>
                           </div>
                         </div>
@@ -413,31 +430,31 @@ O'yinga birga boramizmi?`;
 
                           <div className="space-y-2.5 text-xs text-slate-650">
                             <div className="flex justify-between">
-                              <span>Kvitansiya ID:</span>
+                              <span>{translations.receiptId || 'Kvitansiya ID'}:</span>
                               <span className="font-mono font-bold text-slate-800">{currentBooking.id}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span>Tranzaksiya ID:</span>
+                              <span>{translations.transactionId || 'Tranzaksiya ID'}:</span>
                               <span className="font-mono font-bold text-slate-800">{currentBooking.transactionId || 'CASH_PAYMENT'}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span>Maydon nomi:</span>
+                              <span>{translations.fieldName || 'Maydon nomi'}:</span>
                               <span className="font-bold text-slate-800">{currentBooking.fieldName}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span>Bron kuni:</span>
+                              <span>{translations.bookingDate || 'Bron kuni'}:</span>
                               <span className="font-semibold text-slate-800">{currentBooking.date}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span>Bron vaqti:</span>
+                              <span>{translations.bookingTime || 'Bron vaqti'}:</span>
                               <span className="font-semibold text-slate-800">{currentBooking.timeSlot}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span>To‘lov usuli:</span>
+                              <span>{translations.paymentMethodLabel || 'To‘lov usuli'}:</span>
                               <span className="font-semibold uppercase text-slate-800">{currentBooking.paymentMethod}</span>
                             </div>
                             <div className="flex justify-between border-t border-slate-200 pt-3 mt-3 text-sm font-extrabold">
-                              <span className="text-slate-900">Jami to‘lov:</span>
+                              <span className="text-slate-900">{translations.totalPayment || 'Jami to‘lov'}:</span>
                               <span className="text-brand-700">{currentBooking.price.toLocaleString()} UZS</span>
                             </div>
                           </div>
@@ -450,9 +467,9 @@ O'yinga birga boramizmi?`;
                             setSelectedTimeSlot('');
                             setCurrentBooking(null);
                           }}
-                          className="w-full py-3 px-4 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-all"
+                          className="w-full py-3 px-4 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-all cursor-pointer"
                         >
-                          Yana bron qilish
+                          {translations.bookAgain || 'Yana bron qilish'}
                         </button>
                       </div>
                     )}

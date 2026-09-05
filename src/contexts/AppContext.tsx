@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
-import { FootballField, SearchFilters, ViewMode } from '../types';
+import { FootballField, SearchFilters, ViewMode, AppTab, AuthModalMode } from '../types';
 import { mockFields } from '../data/mockData';
 
 interface AppContextType {
@@ -9,9 +9,15 @@ interface AppContextType {
   searchFilters: SearchFilters;
   isLoading: boolean;
   error: string | null;
+  activeTab: AppTab;
+  setActiveTab: (tab: AppTab) => void;
   setViewMode: (mode: ViewMode) => void;
   setSearchFilters: (filters: Partial<SearchFilters>) => void;
   addField: (field: FootballField) => void;
+  isAuthModalOpen: boolean;
+  authModalMode: AuthModalMode;
+  openAuthModal: (mode?: AuthModalMode) => void;
+  closeAuthModal: () => void;
 }
 
 const AppContext = createContext<AppContextType>({
@@ -21,9 +27,15 @@ const AppContext = createContext<AppContextType>({
   searchFilters: { query: '' },
   isLoading: false,
   error: null,
+  activeTab: 'fields',
+  setActiveTab: () => {},
   setViewMode: () => {},
   setSearchFilters: () => {},
   addField: () => {},
+  isAuthModalOpen: false,
+  authModalMode: 'login',
+  openAuthModal: () => {},
+  closeAuthModal: () => {},
 });
 
 const normalizeText = (value: string) =>
@@ -110,13 +122,51 @@ const sortFieldsByImage = (items: FootballField[], sortBy?: string): FootballFie
 const uniqueFields = sortFieldsByImage(deduplicateByAddress(mockFields));
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const getTabFromHash = (): AppTab => {
+    const hash = window.location.hash.toLowerCase();
+    if (hash === '#how-it-works') return 'how-it-works';
+    if (hash === '#for-owners') return 'for-owners';
+    return 'fields';
+  };
+
+  const [activeTab, setActiveTabState] = useState<AppTab>(getTabFromHash);
   const [fields, setFieldsState] = useState<FootballField[]>([]);
   const [filteredFields, setFilteredFields] = useState<FootballField[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [searchFilters, setSearchFiltersState] = useState<SearchFilters>({ query: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<AuthModalMode>('login');
   const searchTimeoutRef = useRef<number | null>(null);
+
+  const openAuthModal = useCallback((mode: AuthModalMode = 'login') => {
+    setAuthModalMode(mode);
+    setIsAuthModalOpen(true);
+  }, []);
+
+  const closeAuthModal = useCallback(() => {
+    setIsAuthModalOpen(false);
+  }, []);
+
+  const setActiveTab = useCallback((tab: AppTab) => {
+    setActiveTabState(tab);
+    if (tab === 'fields') {
+      window.location.hash = 'fields';
+    } else if (tab === 'how-it-works') {
+      window.location.hash = 'how-it-works';
+    } else if (tab === 'for-owners') {
+      window.location.hash = 'for-owners';
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setActiveTabState(getTabFromHash());
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   // Initialize fields with uniqueFields + customFields on mount
   useEffect(() => {
@@ -211,9 +261,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         searchFilters,
         isLoading,
         error,
+        activeTab,
+        setActiveTab,
         setViewMode,
         setSearchFilters,
         addField,
+        isAuthModalOpen,
+        authModalMode,
+        openAuthModal,
+        closeAuthModal,
       }}
     >
       {children}
