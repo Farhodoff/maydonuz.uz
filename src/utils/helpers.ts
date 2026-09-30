@@ -13,11 +13,6 @@ export const debounce = <F extends (...args: unknown[]) => unknown>(
   };
 };
 
-// Format price with currency
-export const formatPrice = (price: number, currency: string = 'UZS'): string => {
-  return `${price.toLocaleString()} ${currency}`;
-};
-
 // Normalize coordinates to [latitude, longitude] where Uzbekistan latitude is ~37-45, longitude is ~56-74
 export const normalizeCoordinates = (coords: [number, number]): [number, number] => {
   const [c1, c2] = coords;

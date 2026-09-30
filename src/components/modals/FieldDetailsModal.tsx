@@ -159,6 +159,8 @@ O'yinga birga boramizmi?`;
               <img
                 src={field.images[currentImageIndex] || 'https://images.unsplash.com/photo-1579952363873-27f3bade9e55?w=500'}
                 alt={field.name}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
               {field.images.length > 1 && (

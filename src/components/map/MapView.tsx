@@ -148,7 +148,7 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
       const popupHtml = `
         <div style="width: 220px; font-family: inherit;">
           <div style="height: 110px; width: 100%; border-radius: 12px; overflow: hidden; position: relative; margin-bottom: 8px;">
-            <img src="${thumbnail}" alt="${field.name}" style="width: 100%; height: 100%; object-fit: cover;" />
+            <img src="${thumbnail}" alt="${field.name}" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" />
             <div style="position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,0.65); color: white; padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: 600;">
               ${translations[field.fieldType] || field.fieldType}
             </div>

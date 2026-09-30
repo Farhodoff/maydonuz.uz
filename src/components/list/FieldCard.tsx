@@ -40,8 +40,8 @@ const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
     : null;
 
   return (
-    <div 
-      className="group bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 hover:border-brand-400 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+    <div
+      className="group [content-visibility:auto] bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 hover:border-brand-400 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       onClick={() => onFieldClick(field)}
     >
       {/* Left: Icon & Info */}
@@ -155,4 +155,4 @@ const FieldCard: React.FC<FieldCardProps> = ({ field, onFieldClick }) => {
   );
 };
 
-export default FieldCard;
+export default React.memo(FieldCard);

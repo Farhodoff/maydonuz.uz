@@ -343,7 +343,7 @@ const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({ isOpen, onClo
                             imageUrl === img ? 'border-brand-600 scale-[1.05]' : 'border-transparent opacity-60 hover:opacity-100'
                           }`}
                         >
-                          <img src={img} alt="Preset preview" className="w-full h-full object-cover" />
+                          <img src={img} alt="Preset preview" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                         </button>
                       ))}
                     </div>
@@ -406,6 +406,8 @@ const OwnerDashboardModal: React.FC<OwnerDashboardModalProps> = ({ isOpen, onClo
                       <img 
                         src={field.images[0] || PRESET_IMAGES[0]} 
                         alt={field.name} 
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover" 
                       />
                       <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-xs font-black text-slate-800 shadow-sm">

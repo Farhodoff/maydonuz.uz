@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { FootballField, SearchFilters, ViewMode, AppTab, AuthModalMode } from '../types';
 import { mockFields } from '../data/mockData';
 import { calculateDistance } from '../utils/helpers';
@@ -342,30 +342,52 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   }, []);
 
+  const contextValue = useMemo(
+    () => ({
+      fields,
+      filteredFields,
+      viewMode,
+      searchFilters,
+      isLoading,
+      error,
+      activeTab,
+      userLocation,
+      isLocating,
+      requestUserLocation,
+      clearUserLocation,
+      setActiveTab,
+      setViewMode,
+      setSearchFilters,
+      addField,
+      isAuthModalOpen,
+      authModalMode,
+      openAuthModal,
+      closeAuthModal,
+    }),
+    [
+      fields,
+      filteredFields,
+      viewMode,
+      searchFilters,
+      isLoading,
+      error,
+      activeTab,
+      userLocation,
+      isLocating,
+      requestUserLocation,
+      clearUserLocation,
+      setActiveTab,
+      setSearchFilters,
+      addField,
+      isAuthModalOpen,
+      authModalMode,
+      openAuthModal,
+      closeAuthModal,
+    ]
+  );
+
   return (
-    <AppContext.Provider
-      value={{
-        fields,
-        filteredFields,
-        viewMode,
-        searchFilters,
-        isLoading,
-        error,
-        activeTab,
-        userLocation,
-        isLocating,
-        requestUserLocation,
-        clearUserLocation,
-        setActiveTab,
-        setViewMode,
-        setSearchFilters,
-        addField,
-        isAuthModalOpen,
-        authModalMode,
-        openAuthModal,
-        closeAuthModal,
-      }}
-    >
+    <AppContext.Provider value={contextValue}>
       {children}
     </AppContext.Provider>
   );

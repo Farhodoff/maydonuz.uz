@@ -227,6 +227,7 @@ const Navbar: React.FC = () => {
 
               <button
                 onClick={toggleMobileMenu}
+                aria-expanded={isMobileMenuOpen}
                 className="inline-flex items-center justify-center p-2 rounded-xl text-slate-700 hover:text-brand-600 hover:bg-slate-100/80 focus:outline-none cursor-pointer"
                 aria-label="Menu"
               >
@@ -243,7 +244,7 @@ const Navbar: React.FC = () => {
         {/* Mobile menu, show/hide based on state */}
         {isMobileMenuOpen && (
           <div className="md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="px-3 pt-2 pb-4 space-y-2 bg-white border-t border-slate-100 shadow-xl">
+            <div className="max-h-[calc(100vh-4rem)] overflow-y-auto px-3 pt-2 pb-4 space-y-2 bg-white border-t border-slate-100 shadow-xl">
               {/* Expanded Mobile Language Switcher */}
               <div className="p-2 bg-slate-50 rounded-2xl border border-slate-100">
                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">
