@@ -125,7 +125,7 @@ O'yinga birga boramizmi?`;
         ...currentBooking,
         paymentStatus: 'paid',
         paymentMethod: method,
-        transactionId: `tx-${Math.floor(10000000 + Math.random() * 90000000)}`
+        transactionId: res.transactionId
       });
       setStep('receipt');
       toast.success(translations.paymentSuccess || res.message);

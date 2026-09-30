@@ -14,6 +14,12 @@ const ALL_TIME_SLOTS = [
   '22:00 - 23:00'
 ];
 
+const isValidDate = (date: string) => /^\d{4}-\d{2}-\d{2}$/.test(date) && date >= new Date().toISOString().split('T')[0];
+
+const persistBookings = (nextBookings: Booking[]) => {
+  localStorage.setItem('maydon_bookings', JSON.stringify(nextBookings));
+};
+
 export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const { user } = useAuth();
@@ -22,7 +28,14 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     const stored = localStorage.getItem('maydon_bookings');
     if (stored) {
-      setBookings(JSON.parse(stored));
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setBookings(parsed);
+        }
+      } catch {
+        localStorage.removeItem('maydon_bookings');
+      }
     }
   }, []);
 
@@ -36,6 +49,10 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
   ) => {
     if (!user) {
       return { success: false, booking: {} as Booking, message: 'Bron qilish uchun tizimga kiring!' };
+    }
+
+    if (!fieldId || !fieldName || !isValidDate(date) || !ALL_TIME_SLOTS.includes(timeSlot) || price <= 0) {
+      return { success: false, booking: {} as Booking, message: 'Bron ma’lumotlari noto‘g‘ri!' };
     }
 
     // Check if slot is already taken
@@ -52,7 +69,7 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
 
     const newBooking: Booking = {
-      id: `br-${Math.floor(100000 + Math.random() * 900000)}`,
+      id: `br-${crypto.randomUUID()}`,
       fieldId,
       fieldName,
       fieldImage,
@@ -66,30 +83,49 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     const updatedBookings = [newBooking, ...bookings];
     setBookings(updatedBookings);
-    localStorage.setItem('maydon_bookings', JSON.stringify(updatedBookings));
+    persistBookings(updatedBookings);
 
     return { success: true, booking: newBooking, message: 'Maydon muvaffaqiyatli band qilindi!' };
   };
 
   const payBooking = async (bookingId: string, method: 'click' | 'payme' | 'cash') => {
-    const updatedBookings = bookings.map((b) => {
-      if (b.id === bookingId) {
-        return {
-          ...b,
-          paymentStatus: 'paid' as const,
-          paymentMethod: method,
-          transactionId: `tx-${Math.floor(10000000 + Math.random() * 90000000)}`
-        };
-      }
-      return b;
-    });
+    if (!user) {
+      return { success: false, message: 'To‘lov qilish uchun tizimga kiring!' };
+    }
+
+    const booking = bookings.find((b) => b.id === bookingId);
+    if (!booking) return { success: false, message: 'Bron topilmadi!' };
+    if (booking.userId.toLowerCase() !== user.email.toLowerCase()) {
+      return { success: false, message: 'Bu bron sizga tegishli emas!' };
+    }
+    if (booking.paymentStatus !== 'unpaid') {
+      return {
+        success: false,
+        message: booking.paymentStatus === 'paid' ? 'Bu bron uchun to‘lov allaqachon amalga oshirilgan!' : 'Bekor qilingan bron uchun to‘lov qilib bo‘lmaydi!'
+      };
+    }
+
+    const transactionId = `tx-${crypto.randomUUID()}`;
+    const updatedBookings = bookings.map((b) =>
+      b.id === bookingId
+        ? { ...b, paymentStatus: 'paid' as const, paymentMethod: method, transactionId }
+        : b
+    );
 
     setBookings(updatedBookings);
-    localStorage.setItem('maydon_bookings', JSON.stringify(updatedBookings));
-    return { success: true, message: 'To‘lov muvaffaqiyatli amalga oshirildi!' };
+    persistBookings(updatedBookings);
+    return { success: true, transactionId, message: 'To‘lov muvaffaqiyatli amalga oshirildi!' };
   };
 
   const cancelBooking = async (bookingId: string) => {
+    if (!user) return { success: false, message: 'Bronni bekor qilish uchun tizimga kiring!' };
+
+    const booking = bookings.find((b) => b.id === bookingId);
+    if (!booking) return { success: false, message: 'Bron topilmadi!' };
+    if (booking.paymentStatus === 'cancelled') {
+      return { success: false, message: 'Bu bron allaqachon bekor qilingan!' };
+    }
+
     const updatedBookings = bookings.map((b) => {
       if (b.id === bookingId) {
         return { ...b, paymentStatus: 'cancelled' as const };
@@ -98,7 +134,7 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
 
     setBookings(updatedBookings);
-    localStorage.setItem('maydon_bookings', JSON.stringify(updatedBookings));
+    persistBookings(updatedBookings);
     return { success: true, message: 'Bron qilish muvaffaqiyatli bekor qilindi!' };
   };
 
