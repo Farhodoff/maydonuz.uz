@@ -16,6 +16,7 @@ const ViewToggle: React.FC = () => {
     <div className="inline-flex rounded-2xl shadow-soft bg-white p-1 border border-slate-200">
       <button
           type="button"
+          aria-pressed={viewMode === 'map'}
           onClick={() => handleViewChange('map')}
           className={`inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-xl transition-colors duration-200 ${
             viewMode === 'map'
@@ -28,6 +29,7 @@ const ViewToggle: React.FC = () => {
         </button>
         <button
           type="button"
+          aria-pressed={viewMode === 'list'}
           onClick={() => handleViewChange('list')}
           className={`inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-xl transition-colors duration-200 ${
             viewMode === 'list'
