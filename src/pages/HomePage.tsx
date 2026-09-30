@@ -97,9 +97,15 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50/60 pb-20 md:pb-0">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-3 focus:text-sm focus:font-bold focus:text-slate-900 focus:shadow-lg"
+      >
+        Asosiy tarkibga o‘tish
+      </a>
       <Navbar />
 
-      <main className="flex-grow">
+      <main id="main-content" tabIndex={-1} className="flex-grow outline-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {activeTab === 'fields' && (
             <>

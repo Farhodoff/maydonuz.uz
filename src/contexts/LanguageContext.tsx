@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { Language } from '../types';
 
 interface LanguageContextType {
@@ -629,25 +629,28 @@ const LanguageContext = createContext<LanguageContextType>({
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(getInitialLanguage);
 
-  const setLanguage = (lang: Language) => {
+  const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
     if (typeof window !== 'undefined') {
       localStorage.setItem('language', lang);
     }
-  };
+  }, []);
 
   useEffect(() => {
     document.title = translations[language].appName;
   }, [language]);
 
-  return (
-    <LanguageContext.Provider
-      value={{
+  const contextValue = useMemo(
+    () => ({
         language,
         setLanguage,
         translations: translations[language],
-      }}
-    >
+    }),
+    [language, setLanguage]
+  );
+
+  return (
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );
