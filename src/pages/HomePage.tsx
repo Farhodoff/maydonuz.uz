@@ -116,12 +116,12 @@ const HomePage: React.FC = () => {
                 <SearchBar />
 
                 {/* Quick Filter Chips */}
-                <div className="mt-4 flex items-center justify-center flex-wrap gap-2">
+                <div className="scrollbar-hidden mt-4 flex items-center justify-start sm:justify-center flex-nowrap sm:flex-wrap gap-2 overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
                   {quickTags.map((tag, idx) => (
                     <button
                       key={idx}
                       onClick={tag.action}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all active:scale-95 cursor-pointer ${
+                      className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold transition-all active:scale-95 cursor-pointer ${
                         tag.active
                           ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/20'
                           : 'bg-slate-100/90 text-slate-650 hover:bg-slate-200/80 hover:text-slate-900'

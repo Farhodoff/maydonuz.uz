@@ -37,16 +37,19 @@ const SearchBar: React.FC = () => {
           placeholder={translations.search}
           value={inputValue}
           onChange={handleChange}
-          className="w-full py-4 pl-12 pr-24 text-slate-700 bg-white/95 border border-slate-200 rounded-2xl shadow-soft focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+          aria-label={translations.search}
+          className="w-full py-3.5 sm:py-4 pl-11 sm:pl-12 pr-14 sm:pr-24 text-sm sm:text-base text-slate-700 bg-white/95 border border-slate-200 rounded-2xl shadow-soft focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
         />
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Search className="h-5 w-5 text-slate-400" />
         </div>
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+          aria-label={translations.searchBtn}
+          className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 rounded-xl bg-brand-600 px-3 sm:px-4 py-2.5 sm:py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
         >
-          {translations.searchBtn}
+          <span className="sm:hidden">⌕</span>
+          <span className="hidden sm:inline">{translations.searchBtn}</span>
         </button>
       </form>
     </div>

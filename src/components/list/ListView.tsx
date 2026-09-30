@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import FieldCard from './FieldCard';
@@ -15,6 +15,9 @@ const ListView: React.FC = () => {
   const { translations } = useLanguage();
   const [selectedField, setSelectedField] = useState<FootballField | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const handleFieldClick = useCallback((field: FootballField) => {
+    setSelectedField(field);
+  }, []);
 
   // Reset pagination when search/filter results change
   useEffect(() => {
@@ -64,7 +67,7 @@ const ListView: React.FC = () => {
           <FieldCard 
             key={field.id} 
             field={field} 
-            onFieldClick={(field) => setSelectedField(field)}
+            onFieldClick={handleFieldClick}
           />
         ))}
       </div>
