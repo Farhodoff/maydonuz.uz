@@ -50,6 +50,8 @@ const AppContext = createContext<AppContextType>({
 const normalizeText = (value: string) =>
   value
     .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/['`ʻʼ’"]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
@@ -71,13 +73,13 @@ const deduplicateByAddress = (items: FootballField[]): FootballField[] => {
 const matchFilter = (filterValue: string, fieldValue: string): boolean => {
   if (!filterValue) return true;
   
-  const fVal = filterValue.toLowerCase();
-  const dbVal = fieldValue.toLowerCase();
+  const fVal = normalizeText(filterValue);
+  const dbVal = normalizeText(fieldValue);
   
   const normalizationMap: Record<string, string[]> = {
     'tashkent': ['tashkent', 'toshkent'],
     'samarkand': ['samarkand', 'samarqand'],
-    'fergana': ['fergana', 'fargona', 'farg\'ona'],
+    'fergana': ['fergana', 'fargona'],
     'andijan': ['andijan', 'andijon'],
     'yunusabad': ['yunusabad', 'yunusobod'],
     'chilanzar': ['chilanzar', 'chilonzor'],
@@ -108,23 +110,19 @@ const sortFieldsByImage = (
       }
     }
 
-    // Check if fields have images
-    const aHasImage = a.images && a.images.length > 0 && a.images[0] ? 1 : 0;
-    const bHasImage = b.images && b.images.length > 0 && b.images[0] ? 1 : 0;
-    
-    // Primary sort: fields with images first
-    if (aHasImage !== bHasImage) {
-      return bHasImage - aHasImage;
-    }
-    
     // User selected sorting
     if (sortBy === 'price_asc') {
-      return a.price - b.price;
+      if (a.price !== b.price) return a.price - b.price;
     } else if (sortBy === 'price_desc') {
-      return b.price - a.price;
+      if (a.price !== b.price) return b.price - a.price;
     } else if (sortBy === 'rating_desc') {
-      return b.rating - a.rating;
+      if (a.rating !== b.rating) return b.rating - a.rating;
     }
+
+    // Keep image-rich fields prominent only when no explicit sort is selected.
+    const aHasImage = a.images?.[0] ? 1 : 0;
+    const bHasImage = b.images?.[0] ? 1 : 0;
+    if (!sortBy && aHasImage !== bHasImage) return bHasImage - aHasImage;
     
     // Secondary sort: by rating (highest first)
     if (a.rating !== b.rating) {
@@ -275,10 +273,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const runFiltering = useCallback((allFields: FootballField[], filters: SearchFilters, userLoc: [number, number] | null) => {
     try {
       const filtered = allFields.filter((field) => {
-        const matchesQuery = filters.query
-          ? field.name.toLowerCase().includes(filters.query.toLowerCase()) ||
-            field.district.toLowerCase().includes(filters.query.toLowerCase())
-          : true;
+        const query = normalizeText(filters.query || '');
+        const searchableText = [
+          field.name,
+          field.district,
+          field.region,
+          field.address,
+          field.fieldType,
+          field.size,
+        ].map(normalizeText).join(' ');
+        const matchesQuery = query ? searchableText.includes(query) : true;
 
         const matchesRegion = filters.region
           ? matchFilter(filters.region, field.region)

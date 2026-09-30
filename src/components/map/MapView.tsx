@@ -111,6 +111,18 @@ const MapView: React.FC<MapViewProps> = ({ onFieldClick }) => {
     if (!mapReady || !markersLayerRef.current || !mapInstanceRef.current) return;
 
     markersLayerRef.current.clearLayers();
+    const fieldBounds = filteredFields
+      .map((field) => {
+        const [coord1, coord2] = field.coordinates;
+        return [coord1 < 50 ? coord1 : coord2, coord1 > 50 ? coord1 : coord2] as [number, number];
+      })
+      .filter(([lat, lng]) => Number.isFinite(lat) && Number.isFinite(lng));
+
+    if (fieldBounds.length > 1 && !userLocation) {
+      mapInstanceRef.current.fitBounds(fieldBounds, { padding: [36, 36], maxZoom: 14, animate: true });
+    } else if (fieldBounds.length === 1 && !userLocation) {
+      mapInstanceRef.current.flyTo(fieldBounds[0], 14, { duration: 0.8 });
+    }
 
     filteredFields.forEach((field) => {
       const [coord1, coord2] = field.coordinates;
