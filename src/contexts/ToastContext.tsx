@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo, useRef, useEffect } from 'react';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
@@ -23,6 +23,11 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => () => {
+    timersRef.current.forEach(clearTimeout);
+  }, []);
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -35,9 +40,10 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setToasts((prev) => [...prev, newToast]);
 
     if (duration > 0) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         removeToast(id);
       }, duration);
+      timersRef.current.push(timer);
     }
   }, [removeToast]);
 
@@ -46,9 +52,8 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const info = useCallback((msg: string, dur?: number) => showToast(msg, 'info', dur), [showToast]);
   const warning = useCallback((msg: string, dur?: number) => showToast(msg, 'warning', dur), [showToast]);
 
-  return (
-    <ToastContext.Provider
-      value={{
+  const contextValue = useMemo(
+    () => ({
         toasts,
         showToast,
         removeToast,
@@ -56,8 +61,12 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         error,
         info,
         warning,
-      }}
-    >
+    }),
+    [toasts, showToast, removeToast, success, error, info, warning]
+  );
+
+  return (
+    <ToastContext.Provider value={contextValue}>
       {children}
     </ToastContext.Provider>
   );

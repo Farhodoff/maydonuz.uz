@@ -19,7 +19,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const storedUsers = localStorage.getItem('maydon_users');
     if (storedUsers) {
-      setUsers(JSON.parse(storedUsers));
+      try {
+        const parsedUsers = JSON.parse(storedUsers);
+        setUsers(Array.isArray(parsedUsers) ? parsedUsers : DEFAULT_USERS);
+      } catch {
+        localStorage.setItem('maydon_users', JSON.stringify(DEFAULT_USERS));
+        setUsers(DEFAULT_USERS);
+      }
     } else {
       localStorage.setItem('maydon_users', JSON.stringify(DEFAULT_USERS));
       setUsers(DEFAULT_USERS);
@@ -27,7 +33,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const currentUser = localStorage.getItem('maydon_current_user');
     if (currentUser) {
-      setUser(JSON.parse(currentUser));
+      try {
+        const parsedUser = JSON.parse(currentUser);
+        if (parsedUser?.email && parsedUser?.name) setUser(parsedUser);
+      } catch {
+        localStorage.removeItem('maydon_current_user');
+      }
     }
   }, []);
 

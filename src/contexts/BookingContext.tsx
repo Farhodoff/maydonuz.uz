@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { Booking, BookingContextType } from '../types/booking';
 import { useAuth } from './AuthContext';
 
@@ -39,7 +39,7 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
-  const bookField = async (
+  const bookField = useCallback(async (
     fieldId: string,
     fieldName: string,
     fieldImage: string,
@@ -86,9 +86,9 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     persistBookings(updatedBookings);
 
     return { success: true, booking: newBooking, message: 'Maydon muvaffaqiyatli band qilindi!' };
-  };
+  }, [bookings, user]);
 
-  const payBooking = async (bookingId: string, method: 'click' | 'payme' | 'cash') => {
+  const payBooking = useCallback(async (bookingId: string, method: 'click' | 'payme' | 'cash') => {
     if (!user) {
       return { success: false, message: 'To‘lov qilish uchun tizimga kiring!' };
     }
@@ -115,9 +115,9 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setBookings(updatedBookings);
     persistBookings(updatedBookings);
     return { success: true, transactionId, message: 'To‘lov muvaffaqiyatli amalga oshirildi!' };
-  };
+  }, [bookings, user]);
 
-  const cancelBooking = async (bookingId: string) => {
+  const cancelBooking = useCallback(async (bookingId: string) => {
     if (!user) return { success: false, message: 'Bronni bekor qilish uchun tizimga kiring!' };
 
     const booking = bookings.find((b) => b.id === bookingId);
@@ -136,31 +136,34 @@ export const BookingProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setBookings(updatedBookings);
     persistBookings(updatedBookings);
     return { success: true, message: 'Bron qilish muvaffaqiyatli bekor qilindi!' };
-  };
+  }, [bookings, user]);
 
-  const getAvailableTimeSlots = (fieldId: string, date: string): string[] => {
+  const getAvailableTimeSlots = useCallback((fieldId: string, date: string): string[] => {
     const bookedSlots = bookings
       .filter((b) => b.fieldId === fieldId && b.date === date && b.paymentStatus !== 'cancelled')
       .map((b) => b.timeSlot);
 
     return ALL_TIME_SLOTS.filter((slot) => !bookedSlots.includes(slot));
-  };
+  }, [bookings]);
 
-  const getUserBookings = (userId: string): Booking[] => {
+  const getUserBookings = useCallback((userId: string): Booking[] => {
     return bookings.filter((b) => b.userId.toLowerCase() === userId.toLowerCase());
-  };
+  }, [bookings]);
+
+  const contextValue = useMemo(
+    () => ({
+      bookings,
+      bookField,
+      payBooking,
+      cancelBooking,
+      getAvailableTimeSlots,
+      getUserBookings,
+    }),
+    [bookings, bookField, payBooking, cancelBooking, getAvailableTimeSlots, getUserBookings]
+  );
 
   return (
-    <BookingContext.Provider
-      value={{
-        bookings,
-        bookField,
-        payBooking,
-        cancelBooking,
-        getAvailableTimeSlots,
-        getUserBookings
-      }}
-    >
+    <BookingContext.Provider value={contextValue}>
       {children}
     </BookingContext.Provider>
   );

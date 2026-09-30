@@ -1,0 +1,18 @@
+{
+  "name": "Maydonuz",
+  "short_name": "Maydonuz",
+  "description": "Futbol maydonlarini qidirish va band qilish platformasi",
+  "lang": "uz",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
