@@ -16,7 +16,7 @@ export interface Booking {
 export interface BookingContextType {
   bookings: Booking[];
   bookField: (fieldId: string, fieldName: string, fieldImage: string, date: string, timeSlot: string, price: number) => Promise<{ success: boolean; booking: Booking; message: string }>;
-  payBooking: (bookingId: string, method: 'click' | 'payme' | 'cash') => Promise<{ success: boolean; message: string }>;
+  payBooking: (bookingId: string, method: 'click' | 'payme' | 'cash') => Promise<{ success: boolean; message: string; transactionId?: string }>;
   cancelBooking: (bookingId: string) => Promise<{ success: boolean; message: string }>;
   getAvailableTimeSlots: (fieldId: string, date: string) => string[];
   getUserBookings: (userId: string) => Booking[];
