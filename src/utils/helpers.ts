@@ -1,11 +1,11 @@
 // Debounce function to limit the rate at which a function can fire
-export const debounce = <F extends (...args: unknown[]) => unknown>(
-  func: F,
+export const debounce = <Args extends unknown[], R = void>(
+  func: (...args: Args) => R,
   waitFor: number
 ) => {
   let timeout: ReturnType<typeof setTimeout> | null = null;
 
-  return (...args: Parameters<F>): void => {
+  return (...args: Args): void => {
     if (timeout !== null) {
       clearTimeout(timeout);
     }
