@@ -1,0 +1,30 @@
+name: "🚀 Taklif va Yangi Imkoniyat (Feature Request)"
+description: "Maydonuz uchun yangi g'oya, filtr yoki taklif kiritish"
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Maydonuz'ni yanada qulay qilish bo'yicha takliflaringizni mamnuniyat bilan ko'rib chiqamiz!
+  - type: textarea
+    id: problem
+    attributes:
+      label: Muammo yoki Ehtiyoj
+      description: Qanday muammoni hal qilish yoki qanday noqulaylikni yo'qotish kerak?
+      placeholder: Hozirda futbol o'ynovchilar uchun [...] qilish imkoni yo'q.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Taklif Qilinayotgan Yechim
+      description: Yangi imkoniyat qanday ishlashi kerakligi haqida yozing.
+      placeholder: Maydon kartochkasiga yangi tugma yoki filtr qo'shilsa...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Qo'shimcha Ma'lumot yoki Havolalar
+      description: Foydali bo'lishi mumkin bo'lgan har qanday qo'shimcha ma'lumot.

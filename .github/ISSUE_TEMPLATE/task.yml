@@ -1,0 +1,25 @@
+name: "🛠️ Texnik Vazifa / Refaktoring (Task)"
+description: "Dasturchilar uchun arxitektura, testlar, UI takomillashtirish yoki refaktoring vazifasi"
+title: "[Task]: "
+labels: ["task"]
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Vazifa Maqsadi (Objective)
+      description: Nima qilinishi kerak va loyihaga qanday foyda beradi?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Texnik Ko'lam (Scope & Affected Files)
+      description: Qaysi komponentlar, contextlar yoki utils fayllari o'zgaradi?
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Qabul Qilish Mezonlari (Acceptance Criteria)
+      value: |
+        - [ ] Komponent / Funksiya to'liq ishlayapti
+        - [ ] TypeScript va ESLint xatolarisiz (`npm run build`)
+        - [ ] Responsive dizayn mobil va desktopda tekshirildi

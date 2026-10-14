@@ -1,0 +1,58 @@
+name: "🐛 Xatolik Hisoboti (Bug Report)"
+description: "Maydonuz platformasidagi xatoliklar yoki muammolarni xabar qilish"
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Maydonuz platformasini yaxshilashga yordam berayotganingiz uchun rahmat!
+  - type: textarea
+    id: description
+    attributes:
+      label: Xatolik Tavsifi (Description)
+      description: Muammo nimada ekanligi haqida qisqacha ma'lumot bering.
+      placeholder: Qanday xatolik yuz berdi va aslida nima bo'lishi kerak edi...
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Aloqador Modul (Component)
+      options:
+        - Xarita va Pinlar (Leaflet MapView)
+        - Ro'yxat ko'rinishi (ListView & FieldCard)
+        - Filtrlash va Qidiruv (Search & Filters)
+        - Bron qilish va Vaqt tanlash (Booking flow)
+        - To'lov va Match Pass (CLICK / Payme)
+        - Kirish / Ro'yxatdan o'tish (Auth Gate)
+        - Til almashtirish (i18n UZ/RU/EN)
+        - Stadion Egasi Paneli (Owner Dashboard)
+        - Boshqa
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Qayta Tiklash Qadamlari (Steps to Reproduce)
+      description: Xatolikni qayta hosil qilish ketma-ketligi.
+      placeholder: |
+        1. Asosiy sahifada 'Chilonzor' tumanini tanlang
+        2. Maydon kartochkasini oching
+        3. Bron qilish tugmasini bosing
+        4. [...]
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Qurilma va Brauzer
+      description: Masalan, iOS Safari, Android Chrome, macOS Chrome 125
+      placeholder: iPhone 14 Pro, Safari, iOS 17
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Skrinshotlar yoki Konsol Xatolari
+      description: Skrinshotlarni bu yerga tashlang yoki konsol loglarini yozing.
