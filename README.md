@@ -76,6 +76,89 @@ Stadion egalari va menejerlari uchun maxsus biznes bo‘limi:
 
 ---
 
+## 🏛️ Tizim Arxitekturasi va Ma'lumotlar Oqimi (System Architecture)
+
+**Maydonuz** platformasi modulli komponentlar, markazlashgan Context holat boshqaruvi va yuqori tezlikdagi klient-tomon reaktiv qidiruv dvigateli asosida qurilgan:
+
+```mermaid
+flowchart TD
+    %% Styling and Theme Classes
+    classDef ui fill:#0F172A,stroke:#38BDF8,stroke-width:2px,color:#F8FAFC
+    classDef view fill:#1E293B,stroke:#818CF8,stroke-width:2px,color:#F8FAFC
+    classDef context fill:#312E81,stroke:#C084FC,stroke-width:2px,color:#F8FAFC
+    classDef business fill:#064E3B,stroke:#34D399,stroke-width:2px,color:#F8FAFC
+    classDef storage fill:#451A03,stroke:#FBBF24,stroke-width:2px,color:#F8FAFC
+
+    subgraph ClientUI["📱 Foydalanuvchi Interfeysi (UI & Navigation)"]
+        Header["🧭 Navbar & i18n Switcher<br/>(UZ | RU | EN til segmentlari)"]:::ui
+        SearchBox["🔍 Aqlli Filtrlar & Qidiruv<br/>(Tumanlar, Narx, Chip-filtrlar)"]:::ui
+        ViewSwitch["🔀 Ko'rinish Almashtirgich<br/>(Xarita / Ro'yxat rejimi)"]:::ui
+        MobileNav["📲 Mobile Bottom Navigation<br/>(Tezkor mobil boshqaruv)"]:::ui
+    end
+
+    subgraph ViewsLayer["🖥️ Vizual Taqdimot Qatlami (Views & Modals)"]
+        ListView["📋 Ro'yxat Ko'rinishi (ListView)<br/>(FieldCard, Skeletons, Reyting)"]:::view
+        MapView["🗺️ Interaktiv Xarita (MapView)<br/>(Leaflet + OpenStreetMap pinlari)"]:::view
+        Modals["🪟 Modallar Tizimi<br/>(Auth, Maydon Tafsiloti, Bron Tarixi)"]:::view
+        OwnerDash["🏟️ Stadion Egasi Paneli<br/>(Daromad Kalkulyatori & Boshqaruv)"]:::view
+    end
+
+    subgraph ContextTier["⚙️ Holat Boshqaruvi (React Context Architecture)"]
+        LangCtx["🌐 LanguageContext<br/>(UZ / RU / EN lug'atlar & tarjima)"]:::context
+        AppCtx["🎯 AppContext<br/>(Filtrlash, Saralash, Aktiv Maydon)"]:::context
+        AuthCtx["🔐 AuthContext<br/>(Auth Gate, SMS Verification)"]:::context
+        BookCtx["💳 BookingContext<br/>(Bo'sh vaqtlar, Click/Payme to'lov)"]:::context
+        ToastCtx["🔔 ToastContext<br/>(Jonli xabarnomalar navbati)"]:::context
+    end
+
+    subgraph BusinessEngine["⚡ Biznes Mantiq & Dvigatellar (Logic Engine)"]
+        FilterEngine["⚡ Instant Filter & Search<br/>(Debounced live filtering)"]:::business
+        SlotScheduler["🕒 Real-Time Slot Scheduler<br/>(Band va bo'sh soatlar taqvimi)"]:::business
+        MatchPassGen["🎟️ Match Pass Generator<br/>(Telegram kvitansiya & ID)"]:::business
+        RevCalc["💰 Revenue Calculator<br/>(Stadion oylik rentabellik hisobi)"]:::business
+    end
+
+    subgraph DataStorage["🗄️ Ma'lumotlar Baza & Saqlash Qatlami"]
+        MockDB[("⚽ Toshkent Maydonlar Bazasi<br/>(mockData.ts - 50+ maydonlar)")]:::storage
+        LocalStore[("💾 Brauzer LocalStorage<br/>(Bronlar tarixi, Til, Foydalanuvchi)")]:::storage
+    end
+
+    %% UI to Views
+    Header --> LangCtx
+    SearchBox --> AppCtx
+    ViewSwitch --> ListView
+    ViewSwitch --> MapView
+    MobileNav --> Modals
+
+    %% Views to Contexts
+    ListView <--> AppCtx
+    MapView <--> AppCtx
+    Modals <--> AuthCtx
+    Modals <--> BookCtx
+    OwnerDash --> RevCalc
+
+    %% Contexts to Engines
+    AppCtx --> FilterEngine
+    FilterEngine --> MockDB
+    BookCtx --> SlotScheduler
+    BookCtx --> MatchPassGen
+
+    %% Storage Integration
+    BookCtx <--> LocalStore
+    AuthCtx <--> LocalStore
+    LangCtx <--> LocalStore
+    ToastCtx -.-> ClientUI
+```
+
+### 🔄 Foydalanuvchi va Bron Qilish Oqimi (User & Booking Flow)
+
+1. **Qidiruv va Saralash:** Foydalanuvchi tuman (Chilonzor, Yunusobod...) yoki chip-filtrlar (`⭐ 4.5+`, `💰 Arzonroq`) orqali filtrlaydi $\rightarrow$ `AppContext` filtr parametrlarini oladi $\rightarrow$ `FilterEngine` real vaqtda bazani saralab, bir vaqtning o'zida `ListView` hamda `Leaflet MapView` xaritasidagi pinlarni yangilaydi.
+2. **Auth Gate Himoyasi:** Foydalanuvchi maydon tafsilotlari yoki bron qilish tugmasini bosganda, `AuthContext` sessiyani tekshiradi. Agar mehmon bo'lsa, xavfsiz `AuthModal` ochiladi.
+3. **Vaqt Tanlash va To'lov:** `BookingContext` tanlangan sana bo'yicha bo'sh vaqt slotlarini taqdim etadi $\rightarrow$ CLICK, Payme yoki Naqd pul usuli tanlanadi $\rightarrow$ tranzaksiya tasdiqlangach, unikal chipta kodi bilan raqamli **Match Pass** yaratiladi va `LocalStorage`ga saqlanadi.
+4. **Ko'p Tillilik:** Navbar'dagi segmented tugma orqali til o'zgarganda butun interfeys, modallar va xabar bildirishnomalari qayta yuklanmasdan bir zumda o'zgaradi.
+
+---
+
 ## 📂 Loyiha kataloglar strukturasi
 
 ```text
